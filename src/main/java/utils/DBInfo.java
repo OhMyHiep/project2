@@ -1,4 +1,4 @@
-package com.beaconfire.utils;
+package utils;
 
 public final class DBInfo {
 	public static final String JDBC_DRIVER = "org.postgresql.Driver";
