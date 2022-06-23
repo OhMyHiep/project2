@@ -49,7 +49,11 @@
             <version>1.18.20</version>
             <optional>true</optional>
         </dependency>
-
+        <dependency>
+            <groupId>io.pebbletemplates</groupId>
+            <artifactId>pebble</artifactId>
+            <version>3.1.5</version>
+        </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -63,12 +67,12 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M6</version>
-                <!--<configuration>
-                    <suiteXmlFiles>
-<!--                        <suiteXmlFile>src/test/resources/test-suite-1.xml</suiteXmlFile>-->
-                    </suiteXmlFiles>
+<!--                <configuration>-->
+<!--&lt;!&ndash;                    <suiteXmlFiles>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <suiteXmlFile>src/test/resources/test-suite-1.xml</suiteXmlFile>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </suiteXmlFiles>&ndash;&gt;-->
 
-                </configuration>-->
+<!--                </configuration>-->
             </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>

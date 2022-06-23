@@ -15,7 +15,7 @@ public class JDBCUtils {
 		getConnection();
 	}
 
-	public void getConnection() {
+	private void getConnection() {
 		try {
 			Class.forName(DBInfo.JDBC_DRIVER);
 			conn = DriverManager.getConnection(DBInfo.DB_URL, DBInfo.USER, DBInfo.PASSWORD);
