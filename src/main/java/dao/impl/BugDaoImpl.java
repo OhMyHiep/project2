@@ -53,7 +53,7 @@ public class BugDaoImpl implements BasicCrud<Bug> {
                 "FROM bug;";
 
         ResultSet rs = jdbcUtils.executeQuery(sql);
-        Bug firstBug= rowMapper(rs)==;
+        Bug firstBug= rowMapper(rs);
         ArrayList<Bug> bugs= new ArrayList<>();
         bugs.add(firstBug);
 
