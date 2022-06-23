@@ -9,8 +9,15 @@ public class Project2 {
 //                lastname("Huynh").
 //                build();
 //        System.out.println(user.getFirstname());
-        BugCommentDao bc = new BugCommentDao();
-        BugComment test = bc.getById(1);
-        System.out.println(test);
+//        BugCommentDao bc = new BugCommentDao();
+//        Integer test = bc.insert(new BugComment(0, 2, 1, "This is a test", new Date(System.currentTimeMillis())));
+//        System.out.println(test);
+
+        BugDaoImpl bugDao= new BugDaoImpl();
+
+        bugDao.insert(Bug.builder()
+                .creator_id(1)
+                .issueDate(new Date())
+                .build());
     }
 }

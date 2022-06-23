@@ -1,8 +1,7 @@
-package dao.impl;
+package dao;
 
-import dao.BasicCrud;
+import dao.interfaces.BasicCrud;
 import entity.Bug;
-import entity.User;
 import utils.JDBCUtils;
 
 import java.sql.ResultSet;
@@ -13,8 +12,7 @@ import java.util.List;
 public class BugDaoImpl implements BasicCrud<Bug> {
 
     JDBCUtils jdbcUtils=new JDBCUtils();
-
-
+    
     @Override
     public Bug getById(Integer id) {
         String sql= "SELECT *" +
@@ -53,12 +51,13 @@ public class BugDaoImpl implements BasicCrud<Bug> {
                 "FROM bug;";
 
         ResultSet rs = jdbcUtils.executeQuery(sql);
-        Bug firstBug= rowMapper(rs);
+        Bug bug= rowMapper(rs);
         ArrayList<Bug> bugs= new ArrayList<>();
-        bugs.add(firstBug);
-
-
-        return null;
+        while (bug!=null) {
+            bugs.add(bug);
+            bug=rowMapper(rs);
+        }
+        return bugs;
     }
 
     @Override
@@ -67,7 +66,22 @@ public class BugDaoImpl implements BasicCrud<Bug> {
     }
 
     @Override
-    public Integer insert(User user) {
+    public Integer insert(Bug bug) {
+        String sql= "INSERT INTO project2.bug " +
+                "(issue_date,assign_date,close_date,assigned_to,creator_id,description,status,urgency,severity) " +
+                "(?,?,?,?,?,?,?,?,?) RETURNING bug_id";
+
+        jdbcUtils.executeQuery(sql,
+                bug.getIssueDate(),
+                bug.getAssignDate(),
+                bug.getCloseDate(),
+                bug.getAssignedTo(),
+                bug.getCreator_id(),
+                bug.getDescription(),
+                bug.getStatus(),
+                bug.getUrgency(),
+                bug.getSeverity()
+                );
         return null;
     }
 

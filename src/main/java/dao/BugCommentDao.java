@@ -1,5 +1,6 @@
 package dao;
 
+import dao.interfaces.BasicCrud;
 import entity.BugComment;
 import utils.JDBCUtils;
 
@@ -8,7 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BugCommentDao implements BasicCrud<BugComment>{
+public class BugCommentDao implements BasicCrud<BugComment> {
     @Override
     public BugComment getById(Integer id) {
         JDBCUtils conn = new JDBCUtils();
