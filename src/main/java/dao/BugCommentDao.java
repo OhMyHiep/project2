@@ -84,35 +84,41 @@ public class BugCommentDao implements BasicCrud<BugComment> {
         JDBCUtils conn = new JDBCUtils();
         String sql = "DELETE FROM project2.BugComment WHERE comment_id=?";
 
-        Integer result = conn.executeUpdate(sql, id);
-
-        conn.close();
-
-        return result;
+        try {
+            Integer result = conn.executeUpdate(sql, id);
+            return result;
+        }
+        finally {
+            conn.close();
+        }
     }
 
     @Override
     public Integer insert(BugComment comment) {
         JDBCUtils conn = new JDBCUtils();
-        String sql = "INSERT INTO project2.BugComment VALUES (default, ?, ?, ?, ?)";
+        String sql = "INSERT INTO project2.BugComment VALUES (default, ?, ?, ?, ?) RETURNING comment_id";
 
-        Integer result = conn.executeUpdate(sql, comment.getBugId(), comment.getCommenterUserId(), comment.getCommentText(), comment.getCommentDate());
+        ResultSet result = conn.executeQuery(sql, comment.getBugId(), comment.getCommenterUserId(), comment.getCommentText(), comment.getCommentDate());
 
-        conn.close();
+        Integer returnValue = -1;
+        try {
+            while (result.next()) {
+                result.getInt(returnValue);
+            }
+            return returnValue;
+        }
+        catch (SQLException e) {
 
-        return result;
+        } finally {
+            conn.close();
+        }
+
+        return null;
     }
 
     // Will probably never be used, unless implement comment update but needs interface change
     @Override
-    public Integer update(Integer id) {
-        JDBCUtils conn = new JDBCUtils();
-        String sql = "UPDATE project2.BugComment SET comment_text='' WHERE comment_id=?";
-
-        Integer result = conn.executeUpdate(sql, id);
-
-        conn.close();
-
-        return result;
+    public Integer update(BugComment comment) {
+        return null;
     }
 }
