@@ -86,7 +86,10 @@ public class BugDaoImpl implements BasicCrud<Bug> {
     }
 
     @Override
-    public Integer update(Integer id) {
+    public Integer update(Bug bug) {
+        String sql= "UPDATE project2.bug " +
+                "SET issue_date=?,assign_date=?,close_date=?, assigned_to=?, creator_id=?,description=?,status=?,urgency=?,severity=?";
+
         return null;
     }
 }

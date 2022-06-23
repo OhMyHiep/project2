@@ -1,6 +1,9 @@
 import dao.BugCommentDao;
+import entity.Bug;
 import entity.BugComment;
-import entity.User;
+import dao.BugDaoImpl;
+
+import java.util.Date;
 
 public class Project2 {
     public static void main(String[] args) {
@@ -20,4 +23,5 @@ public class Project2 {
                 .issueDate(new Date())
                 .build());
     }
+
 }
