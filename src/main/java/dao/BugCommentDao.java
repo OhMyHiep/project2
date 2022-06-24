@@ -118,7 +118,7 @@ public class BugCommentDao implements BasicCrud<BugComment> {
 
     // Will probably never be used, unless implement comment update but needs interface change
     @Override
-    public Integer update(BugComment comment) {
+    public Integer update(Object ...comment) {
         return null;
     }
 }

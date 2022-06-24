@@ -6,6 +6,7 @@ import utils.JDBCUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class BugDaoImpl implements BasicCrud<Bug> {
     @Override
     public Bug getById(Integer id) {
         String sql= "SELECT *" +
-                "FROM bug " +
+                "FROM project2.bug " +
                 "where bug_id=?";
         ResultSet rs= jdbcUtils.executeQuery(sql,id);
         return rowMapper(rs);
@@ -69,12 +70,11 @@ public class BugDaoImpl implements BasicCrud<Bug> {
     public Integer insert(Bug bug) {
         String sql= "INSERT INTO project2.bug " +
                 "(issue_date,assign_date,close_date,assigned_to,creator_id,description,status,urgency,severity) " +
-                "(?,?,?,?,?,?,?,?,?) RETURNING bug_id";
-
-        jdbcUtils.executeQuery(sql,
-                bug.getIssueDate(),
-                bug.getAssignDate(),
-                bug.getCloseDate(),
+                "VALUES (?,?,?,?,?,?,?,?,?) RETURNING *";
+        ResultSet rs = jdbcUtils.executeQuery(sql,
+                (Timestamp)bug.getIssueDate(),
+                (Timestamp)bug.getAssignDate(),
+                (Timestamp)bug.getCloseDate(),
                 bug.getAssignedTo(),
                 bug.getCreator_id(),
                 bug.getDescription(),
@@ -82,14 +82,37 @@ public class BugDaoImpl implements BasicCrud<Bug> {
                 bug.getUrgency(),
                 bug.getSeverity()
                 );
-        return null;
+        Bug insertedBug= rowMapper(rs);
+        return insertedBug.getBug_id();
     }
 
     @Override
-    public Integer update(Bug bug) {
-        String sql= "UPDATE project2.bug " +
-                "SET issue_date=?,assign_date=?,close_date=?, assigned_to=?, creator_id=?,description=?,status=?,urgency=?,severity=?";
-
+    public Integer update(Object ...bug) {
+//        String sql= "UPDATE project2.bug " +
+//                "SET issue_date=?,assign_date=?,close_date=?, assigned_to=?,description=?,status=?,urgency=?,severity=? " +
+//                "WHERE bug_id=?" +
+//                "RETURNING *";
+//        Bug queryBug=getById(bug.getBug_id());
+//        Timestamp issueDate= bug.getIssueDate()==null? (queryBug.getIssueDate()==null? null:(Timestamp) queryBug.getIssueDate()): (Timestamp)bug.getIssueDate();
+//        Timestamp assignDate= bug.getAssignDate()==null? (Timestamp)queryBug.getAssignDate(): (Timestamp)bug.getAssignDate();
+//        Timestamp closeDate= bug.getCloseDate()==null? (Timestamp)queryBug.getCloseDate(): (Timestamp)bug.getCloseDate();
+//        String description= bug.getDescription()==null? queryBug.getDescription(): bug.getDescription();
+//        Integer status= bug.getStatus()==null? queryBug.getStatus() : bug.getStatus();
+//        Integer urgency= bug.getUrgency()==null? queryBug.getUrgency() : bug.getUrgency();
+//        Integer assignedTo= bug.getAssignedTo()==null? queryBug.getAssignedTo() : bug.getAssignedTo();
+//        Integer severity= bug.getSeverity()==null? queryBug.getSeverity() : bug.getSeverity();
+//
+//        return rowMapper(jdbcUtils.executeQuery(sql,
+//                issueDate,
+//                assignDate,
+//                closeDate,
+//                assignedTo,
+//                description,
+//                status,
+//                urgency,
+//                severity,
+//                bug.getBug_id())
+//        ).getBug_id();
         return null;
     }
 }
