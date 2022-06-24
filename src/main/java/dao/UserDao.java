@@ -10,7 +10,7 @@ import java.util.List;
 public class UserDao implements BasicCrud<User> {
 
     @Override
-    public User getById(Integer id) {
+    public User getById(Integer id) {//dan was here
         JDBCUtils dbUtil = new JDBCUtils();
         String qry = "SELECT * FROM project2.Users WHERE user_id=?;";
 
