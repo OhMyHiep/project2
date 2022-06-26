@@ -11,9 +11,10 @@ import java.util.List;
 
 public class UserDao implements BasicCrud<User> {
 
+    private JDBCUtils dbUtil = new JDBCUtils();
+
     @Override
     public User getById(Integer id) {//dan was here
-        JDBCUtils dbUtil = new JDBCUtils();
         String qry = "SELECT * FROM project2.Users WHERE user_id=?;";
 
         ResultSet r = dbUtil.executeQuery(qry, id);
@@ -33,7 +34,6 @@ public class UserDao implements BasicCrud<User> {
 
     @Override
     public List<User> getAll() {
-        JDBCUtils dbUtil = new JDBCUtils();
         String qry = "SELECT * FROM project2.Users;";
 
         ArrayList<User> au = new ArrayList<User>();
@@ -55,7 +55,6 @@ public class UserDao implements BasicCrud<User> {
 
     @Override
     public Integer deleteById(Integer id) {
-        JDBCUtils dbUtil = new JDBCUtils();
         String qry = "DELETE FROM project2.Users WHERE user_id=? RETURNING user_id;";
         int output = -1;
 
@@ -73,7 +72,6 @@ public class UserDao implements BasicCrud<User> {
 
     @Override
     public Integer insert(User data) {
-        JDBCUtils dbUtil = new JDBCUtils();
         String qry = "INSERT INTO project2.Users(username,passwd,firstname,lastname,authtoken) VALUES (?, ?, ?, ?, ?) RETURNING user_id;";
 
         ResultSet rs = dbUtil.executeQuery(qry,data.getUsername(),data.getPasswd(),
@@ -92,7 +90,6 @@ public class UserDao implements BasicCrud<User> {
 
     @Override
     public Integer update(User data) {
-        JDBCUtils dbUtil = new JDBCUtils();
         String qry = "UPDATE TABLE project2.Users SET username=?, passwd=?, firstname=?, lastname=?, authtoken=? WHERE user_id=? RETURNING user_id;";
         int output = -1;
 
@@ -107,4 +104,9 @@ public class UserDao implements BasicCrud<User> {
 
         return output;
     }
+
+    public void closeConnection() {
+        dbUtil.close();
+    }
+
 }

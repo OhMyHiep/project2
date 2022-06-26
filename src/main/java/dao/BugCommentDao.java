@@ -118,7 +118,6 @@ public class BugCommentDao implements BasicCrud<BugComment> {
         return null;
     }
 
-    @Override
     public List<BugComment> getBugByCreatorId(Integer commenterUserId) {
         JDBCUtils conn = new JDBCUtils();
         String sql = "SELECT * FROM project2.BugComment WHERE commenterUserId=?";
@@ -141,10 +140,5 @@ public class BugCommentDao implements BasicCrud<BugComment> {
 
         return null;
 
-    }
-
-    @Override
-    public List<BugComment> getBugByAssignee(Integer assignedTo) {
-        return null;
     }
 }

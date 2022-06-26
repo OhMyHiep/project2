@@ -12,9 +12,7 @@ public interface BasicCrud <T>{
 
     public Integer update(T data);//return id of updated obj
 
-    public List<T> getBugByCreatorId(Integer creator_id); //return bugs by creator id
 
-    public List<T> getBugByAssignee(Integer assignedTo);
 
 
 }

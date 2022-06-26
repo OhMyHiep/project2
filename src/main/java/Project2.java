@@ -18,23 +18,6 @@ import java.sql.Date;
 
 public class Project2 {
     public static void main(String[] args) {
-        Javalin app = Javalin.create().start(9090);
-
-        // later will be bug/{bug_id}/comments
-        app.post("/comments", BugCommentController.viewAllCommentsRequest);
-        app.post("/comments/new-comment", BugCommentController.createCommentRequest);
-        BugDaoImpl bugDao= new BugDaoImpl();
-        BugService bugService=new BugService();
-//        System.out.println( bugDao.deleteById(8));
-
-        System.out.println(bugService.getById(100));
-
-//        System.out.println(bugService.update(Bug.builder()
-//                        .bug_id(5)
-//                        .description("testing updating bug 5 description replacing")
-//                .creator_id(1)
-//                .issueDate(new Date(new java.util.Date().getTime()))
-//                .build()));
         JavalinRenderer.register(JavalinPebble.INSTANCE,".html");
         Javalin app = Javalin.create(
                 config -> {

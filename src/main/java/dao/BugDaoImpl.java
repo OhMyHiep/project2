@@ -120,31 +120,6 @@ public class BugDaoImpl implements BasicCrud<Bug> {
         return rowMapper(rs);
     }
 
-    public List<BugComment> getCommentsByBugId(Integer id){
-        String sql= "SELECT *" +
-                "FROM project2.bugcomment " +
-                "where commenter_id=?";
-        ResultSet rs= jdbcUtils.executeQuery(sql,id);
-        BugComment bugComment= commentRowMapper(rs);
-        ArrayList<BugComment> comments =new ArrayList<>();
-        while (bugComment!=null){
-            comments.add(bugComment);
-            bugComment=commentRowMapper(rs);
-        }
-        return comments;
-    }
-
-    private User UserRowMapper(ResultSet r){
-        try {
-            if(r.next()){
-                return new User(r.getString("user_id"),r.getString("username"),r.getString("passwd"),
-                        r.getString("firstname"),r.getString("lastname"), r.getString("authtoken"));
-            }
-            else return null;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     private BugComment commentRowMapper(ResultSet rs){
         try {
@@ -162,8 +137,6 @@ public class BugDaoImpl implements BasicCrud<Bug> {
     public void closeConnection(){
         jdbcUtils.close();
     }
-
-    @Override
     public List<Bug> getBugByCreatorId(Integer creator_id) {
         String sql = "SELECT *" +
                 "FROM bug;"+
