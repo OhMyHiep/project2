@@ -5,12 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Date;
+
+
 @Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
-    private String firstname;
-    private String lastname;
+public class BugDto {
     private String url;
 }

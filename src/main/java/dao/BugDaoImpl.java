@@ -2,8 +2,11 @@ package dao;
 
 import dao.interfaces.BasicCrud;
 import entity.Bug;
+import entity.BugComment;
+import entity.User;
 import utils.JDBCUtils;
 
+import javax.swing.tree.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -16,7 +19,7 @@ public class BugDaoImpl implements BasicCrud<Bug> {
     @Override
     public Bug getById(Integer id) {
         String sql= "SELECT *" +
-                "FROM bug " +
+                "FROM project2.bug " +
                 "where bug_id=?";
         ResultSet rs= jdbcUtils.executeQuery(sql,id);
         return rowMapper(rs);
@@ -28,7 +31,7 @@ public class BugDaoImpl implements BasicCrud<Bug> {
                        .issueDate(rs.getDate("issue_date"))
                        .assignDate(rs.getDate("assign_date"))
                        .closeDate(rs.getDate("close_date"))
-                       .assignedTo(rs.getInt("assigned_to"))
+                       .assigned_to(rs.getInt("assigned_to"))
                        .creator_id(rs.getInt("creator_id"))
                        .description(rs.getString("description"))
                        .status(rs.getInt("status"))
@@ -62,34 +65,101 @@ public class BugDaoImpl implements BasicCrud<Bug> {
 
     @Override
     public Integer deleteById(Integer id) {
-        return null;
+        String sql="DELETE FROM " +
+                "project2.bug " +
+                "WHERE bug_id=? RETURNING *";
+        return rowMapper(jdbcUtils.executeQuery(sql,id)).getBug_id();
     }
 
     @Override
     public Integer insert(Bug bug) {
         String sql= "INSERT INTO project2.bug " +
                 "(issue_date,assign_date,close_date,assigned_to,creator_id,description,status,urgency,severity) " +
-                "(?,?,?,?,?,?,?,?,?) RETURNING bug_id";
-
-        jdbcUtils.executeQuery(sql,
+                "VALUES (?,?,?,?,?,?,?,?,?) RETURNING *";
+        ResultSet rs = jdbcUtils.executeQuery(sql,
                 bug.getIssueDate(),
                 bug.getAssignDate(),
                 bug.getCloseDate(),
-                bug.getAssignedTo(),
+                bug.getAssigned_to(),
                 bug.getCreator_id(),
                 bug.getDescription(),
                 bug.getStatus(),
                 bug.getUrgency(),
                 bug.getSeverity()
                 );
-        return null;
+        Bug insertedBug= rowMapper(rs);
+        return insertedBug.getBug_id();
     }
 
     @Override
     public Integer update(Bug bug) {
         String sql= "UPDATE project2.bug " +
-                "SET issue_date=?,assign_date=?,close_date=?, assigned_to=?, creator_id=?,description=?,status=?,urgency=?,severity=?";
+                "SET issue_date=?,assign_date=?,close_date=?, assigned_to=?,description=?,status=?,urgency=?,severity=? " +
+                "WHERE bug_id=? " +
+                "RETURNING *";
 
-        return null;
+        return rowMapper(jdbcUtils.executeQuery(sql,
+                bug.getIssueDate(),
+                bug.getAssignDate(),
+                bug.getCloseDate(),
+                bug.getAssigned_to(),
+                bug.getDescription(),
+                bug.getStatus(),
+                bug.getUrgency(),
+                bug.getSeverity(),
+                bug.getBug_id())
+        ).getBug_id();
+
+    }
+
+    public Bug getBugByUserId(Integer id){
+        String sql= "SELECT *" +
+                "FROM project2.bug " +
+                "where creator_id=?";
+        ResultSet rs= jdbcUtils.executeQuery(sql,id);
+        return rowMapper(rs);
+    }
+
+    public List<BugComment> getCommentsByBugId(Integer id){
+        String sql= "SELECT *" +
+                "FROM project2.bugcomment " +
+                "where commenter_id=?";
+        ResultSet rs= jdbcUtils.executeQuery(sql,id);
+        BugComment bugComment= commentRowMapper(rs);
+        ArrayList<BugComment> comments =new ArrayList<>();
+        while (bugComment!=null){
+            comments.add(bugComment);
+            bugComment=commentRowMapper(rs);
+        }
+        return comments;
+    }
+
+    private User UserRowMapper(ResultSet r){
+        try {
+            if(r.next()){
+                return new User(r.getString("user_id"),r.getString("username"),r.getString("passwd"),
+                        r.getString("firstname"),r.getString("lastname"), r.getString("authtoken"));
+            }
+            else return null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private BugComment commentRowMapper(ResultSet rs){
+        try {
+            if(rs.next())
+                return new BugComment(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(4), rs.getDate(5));
+            else return null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void commitTransaction(){
+        jdbcUtils.commit();
+    }
+    public void closeConnection(){
+        jdbcUtils.close();
     }
 }
