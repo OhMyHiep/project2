@@ -16,7 +16,7 @@ public class BugDaoImpl implements BasicCrud<Bug> {
     @Override
     public Bug getById(Integer id) {
         String sql= "SELECT *" +
-                "FROM bug " +
+                "FROM project2.bug " +
                 "where bug_id=?";
         ResultSet rs= jdbcUtils.executeQuery(sql,id);
         return rowMapper(rs);

@@ -1,0 +1,7 @@
+<suite name="Testing comments suite">
+    <test name="Testing comment creation">
+        <classes>
+            <class name="project2.TestBugCommentService"/>
+        </classes>
+    </test>
+</suite>

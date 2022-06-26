@@ -1,27 +1,13 @@
-import dao.BugCommentDao;
-import entity.Bug;
-import entity.BugComment;
-import dao.BugDaoImpl;
+import controller.BugCommentController;
 
-import java.util.Date;
+import io.javalin.Javalin;
 
 public class Project2 {
     public static void main(String[] args) {
-//        User user=User.builder().
-//                firstname("Hiep").
-//                lastname("Huynh").
-//                build();
-//        System.out.println(user.getFirstname());
-//        BugCommentDao bc = new BugCommentDao();
-//        Integer test = bc.insert(new BugComment(0, 2, 1, "This is a test", new Date(System.currentTimeMillis())));
-//        System.out.println(test);
+        Javalin app = Javalin.create().start(9090);
 
-        BugDaoImpl bugDao= new BugDaoImpl();
-
-        bugDao.insert(Bug.builder()
-                .creator_id(1)
-                .issueDate(new Date())
-                .build());
+        // later will be bug/{bug_id}/comments
+        app.post("/comments", BugCommentController.viewAllCommentsRequest);
+        app.post("/comments/new-comment", BugCommentController.createCommentRequest);
     }
-
 }
