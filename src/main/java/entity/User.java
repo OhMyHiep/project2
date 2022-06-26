@@ -8,7 +8,7 @@ import lombok.*;
 @Builder
 public class User {
 
-    private String user_id;
+    private int user_id;
     private String username;
     private String passwd;
     private String firstname;
