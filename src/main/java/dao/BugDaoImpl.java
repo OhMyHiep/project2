@@ -92,4 +92,36 @@ public class BugDaoImpl implements BasicCrud<Bug> {
 
         return null;
     }
+
+    @Override
+    public List<Bug> getBugByCreatorId(Integer creator_id) {
+        String sql = "SELECT *" +
+                "FROM bug;"+
+                "where creator_id=?";
+
+        ResultSet rs = jdbcUtils.executeQuery(sql,creator_id);
+        Bug bug= rowMapper(rs);
+        ArrayList<Bug> bugs= new ArrayList<>();
+        while (bug!=null) {
+            bugs.add(bug);
+            bug=rowMapper(rs);
+        }
+        return bugs;
+    }
+
+    @Override
+    public List<Bug> getBugByAssignee(Integer assignedTo) {
+        String sql = "SELECT *" +
+                "FROM bug;"+
+                "where assignedTo=?";
+
+        ResultSet rs = jdbcUtils.executeQuery(sql,assignedTo);
+        Bug bug= rowMapper(rs);
+        ArrayList<Bug> bugs= new ArrayList<>();
+        while (bug!=null) {
+            bugs.add(bug);
+            bug=rowMapper(rs);
+        }
+        return bugs;
+    }
 }
