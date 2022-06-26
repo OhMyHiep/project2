@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.sql.Date;
 
 @Data
 @Builder
@@ -21,6 +21,6 @@ public class Bug {
     private String description;
     private Integer status;
     private Integer urgency;
-    private Integer assignedTo;
+    private Integer assigned_to;
     private Integer severity;
 }

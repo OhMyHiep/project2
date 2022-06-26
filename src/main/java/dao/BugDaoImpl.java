@@ -2,11 +2,13 @@ package dao;
 
 import dao.interfaces.BasicCrud;
 import entity.Bug;
+import entity.BugComment;
+import entity.User;
 import utils.JDBCUtils;
 
+import javax.swing.tree.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +31,7 @@ public class BugDaoImpl implements BasicCrud<Bug> {
                        .issueDate(rs.getDate("issue_date"))
                        .assignDate(rs.getDate("assign_date"))
                        .closeDate(rs.getDate("close_date"))
-                       .assignedTo(rs.getInt("assigned_to"))
+                       .assigned_to(rs.getInt("assigned_to"))
                        .creator_id(rs.getInt("creator_id"))
                        .description(rs.getString("description"))
                        .status(rs.getInt("status"))
@@ -63,7 +65,10 @@ public class BugDaoImpl implements BasicCrud<Bug> {
 
     @Override
     public Integer deleteById(Integer id) {
-        return null;
+        String sql="DELETE FROM " +
+                "project2.bug " +
+                "WHERE bug_id=? RETURNING *";
+        return rowMapper(jdbcUtils.executeQuery(sql,id)).getBug_id();
     }
 
     @Override
@@ -72,10 +77,10 @@ public class BugDaoImpl implements BasicCrud<Bug> {
                 "(issue_date,assign_date,close_date,assigned_to,creator_id,description,status,urgency,severity) " +
                 "VALUES (?,?,?,?,?,?,?,?,?) RETURNING *";
         ResultSet rs = jdbcUtils.executeQuery(sql,
-                (Timestamp)bug.getIssueDate(),
-                (Timestamp)bug.getAssignDate(),
-                (Timestamp)bug.getCloseDate(),
-                bug.getAssignedTo(),
+                bug.getIssueDate(),
+                bug.getAssignDate(),
+                bug.getCloseDate(),
+                bug.getAssigned_to(),
                 bug.getCreator_id(),
                 bug.getDescription(),
                 bug.getStatus(),
@@ -87,32 +92,74 @@ public class BugDaoImpl implements BasicCrud<Bug> {
     }
 
     @Override
-    public Integer update(Object ...bug) {
-//        String sql= "UPDATE project2.bug " +
-//                "SET issue_date=?,assign_date=?,close_date=?, assigned_to=?,description=?,status=?,urgency=?,severity=? " +
-//                "WHERE bug_id=?" +
-//                "RETURNING *";
-//        Bug queryBug=getById(bug.getBug_id());
-//        Timestamp issueDate= bug.getIssueDate()==null? (queryBug.getIssueDate()==null? null:(Timestamp) queryBug.getIssueDate()): (Timestamp)bug.getIssueDate();
-//        Timestamp assignDate= bug.getAssignDate()==null? (Timestamp)queryBug.getAssignDate(): (Timestamp)bug.getAssignDate();
-//        Timestamp closeDate= bug.getCloseDate()==null? (Timestamp)queryBug.getCloseDate(): (Timestamp)bug.getCloseDate();
-//        String description= bug.getDescription()==null? queryBug.getDescription(): bug.getDescription();
-//        Integer status= bug.getStatus()==null? queryBug.getStatus() : bug.getStatus();
-//        Integer urgency= bug.getUrgency()==null? queryBug.getUrgency() : bug.getUrgency();
-//        Integer assignedTo= bug.getAssignedTo()==null? queryBug.getAssignedTo() : bug.getAssignedTo();
-//        Integer severity= bug.getSeverity()==null? queryBug.getSeverity() : bug.getSeverity();
-//
-//        return rowMapper(jdbcUtils.executeQuery(sql,
-//                issueDate,
-//                assignDate,
-//                closeDate,
-//                assignedTo,
-//                description,
-//                status,
-//                urgency,
-//                severity,
-//                bug.getBug_id())
-//        ).getBug_id();
-        return null;
+    public Integer update(Bug bug) {
+        String sql= "UPDATE project2.bug " +
+                "SET issue_date=?,assign_date=?,close_date=?, assigned_to=?,description=?,status=?,urgency=?,severity=? " +
+                "WHERE bug_id=? " +
+                "RETURNING *";
+
+        return rowMapper(jdbcUtils.executeQuery(sql,
+                bug.getIssueDate(),
+                bug.getAssignDate(),
+                bug.getCloseDate(),
+                bug.getAssigned_to(),
+                bug.getDescription(),
+                bug.getStatus(),
+                bug.getUrgency(),
+                bug.getSeverity(),
+                bug.getBug_id())
+        ).getBug_id();
+
+    }
+
+    public Bug getBugByUserId(Integer id){
+        String sql= "SELECT *" +
+                "FROM project2.bug " +
+                "where creator_id=?";
+        ResultSet rs= jdbcUtils.executeQuery(sql,id);
+        return rowMapper(rs);
+    }
+
+    public List<BugComment> getCommentsByBugId(Integer id){
+        String sql= "SELECT *" +
+                "FROM project2.bugcomment " +
+                "where commenter_id=?";
+        ResultSet rs= jdbcUtils.executeQuery(sql,id);
+        BugComment bugComment= commentRowMapper(rs);
+        ArrayList<BugComment> comments =new ArrayList<>();
+        while (bugComment!=null){
+            comments.add(bugComment);
+            bugComment=commentRowMapper(rs);
+        }
+        return comments;
+    }
+
+    private User UserRowMapper(ResultSet r){
+        try {
+            if(r.next()){
+                return new User(r.getString("user_id"),r.getString("username"),r.getString("passwd"),
+                        r.getString("firstname"),r.getString("lastname"), r.getString("authtoken"));
+            }
+            else return null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private BugComment commentRowMapper(ResultSet rs){
+        try {
+            if(rs.next())
+                return new BugComment(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(4), rs.getDate(5));
+            else return null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void commitTransaction(){
+        jdbcUtils.commit();
+    }
+    public void closeConnection(){
+        jdbcUtils.close();
     }
 }

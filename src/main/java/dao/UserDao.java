@@ -43,8 +43,7 @@ public class UserDao implements BasicCrud<User> {
     }
 
     @Override
-    public Integer update(Object ...data) {
-
+    public Integer update(User data) {
         return null;
     }
 }

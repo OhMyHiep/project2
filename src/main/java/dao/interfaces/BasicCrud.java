@@ -10,7 +10,7 @@ public interface BasicCrud <T>{
 
     public Integer insert(T data);//return the id of the inserted obj
 
-    public Integer update(Object ...data);//return id of updated obj
+    public Integer update(T data);//return id of updated obj
 
 
 }
