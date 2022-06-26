@@ -150,7 +150,7 @@ public class BugDaoImpl implements BasicCrud<Bug> {
         return bugs;
     }
 
-    @Override
+
     public List<Bug> getBugByAssignee(Integer assignedTo) {
         String sql = "SELECT *" +
                 "FROM bug;"+
