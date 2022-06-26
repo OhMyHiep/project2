@@ -1,13 +1,12 @@
 package service;
 
 
+import dao.BugCommentDao;
 import dao.BugDaoImpl;
 import dao.UserDao;
 import domain.repsonse.BugListResponse;
 import domain.repsonse.BugResponse;
 import entity.Bug;
-import entity.BugComment;
-import entity.User;
 import entity.dto.BugDto;
 import entity.dto.BugCommentDto;
 import entity.dto.UserDto;
@@ -22,6 +21,7 @@ public class BugService {
 
     private BugDaoImpl bugDao = new BugDaoImpl();
     private UserDao userDao =new UserDao();
+    private BugCommentDao bugCommentDao = new BugCommentDao();
 
     public static BugResponse bugResponseMapper(Bug bug,BugDto bugDto, List<BugCommentDto> bugCommentDto, UserDto creator,UserDto assigned_to){
         return BugResponse.builder()
@@ -46,30 +46,16 @@ public class BugService {
                 .build();
     }
 
-    public static BugCommentDto BugCommentDtoMapper(BugComment comment){
-        return BugCommentDto.builder()
-                .url("/placeholder/"+comment.getCommentId())
-                .build();
-    }
-
-    public static UserDto userDtoMapper(User user){
-        return UserDto.builder()
-                .firstname(user.getFirstname())
-                .lastname(user.getLastname())
-                .url("/placeholder/"+user.getUser_id())
-                .build();
-    }
-
     public BugResponse getById(Integer bugId) {
         if (bugId==null) return null;
         Bug bug =bugDao.getById(bugId);
         if (bug==null) return null;
         BugDto bugDto= bugDtoMapper(bug);
-        List<BugCommentDto> commentDtos= bugDao.getCommentsByBugId(bugId).stream()
-                .map(bugComment ->BugCommentDtoMapper(bugComment))
+        List<BugCommentDto> commentDtos= bugCommentDao.getAllByBugId(bugId).stream()
+                .map(bugComment ->BugCommentService.BugCommentDtoMapper(bugComment))
                 .collect(Collectors.toList());
-        UserDto creator= userDtoMapper(userDao.getById(bug.getCreator_id()));
-        UserDto assigned_to= userDtoMapper(userDao.getById(bug.getAssigned_to()));
+        UserDto creator= UserService.userDtoMapper(userDao.getById(bug.getCreator_id()));
+        UserDto assigned_to= UserService.userDtoMapper(userDao.getById(bug.getAssigned_to()));
         return bugResponseMapper(bug,bugDto,commentDtos,creator,assigned_to);
     }
 

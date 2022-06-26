@@ -5,14 +5,21 @@ import dao.BugDaoImpl;
 import domain.repsonse.BugCommentResponse;
 import entity.Bug;
 import entity.BugComment;
-import io.javalin.http.Context;
+import entity.dto.BugCommentDto;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class BugCommentService {
 
-    private BugCommentResponse convertToCommentResponse(BugComment bugComment) {
+    public static BugCommentDto BugCommentDtoMapper(BugComment comment){
+        return BugCommentDto.builder()
+                .url("/placeholder/"+comment.getCommentId())
+                .build();
+    }
+
+    private BugCommentResponse convertToCommentResponse(BugComment bugComment, BugCommentDto commentDto) {
         return BugCommentResponse.builder()
                 .commentId(bugComment.getCommentId())
                 .bugId(bugComment.getBugId())

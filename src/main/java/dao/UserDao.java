@@ -4,7 +4,6 @@ import dao.interfaces.BasicCrud;
 import entity.User;
 import utils.JDBCUtils;
 
-import javax.xml.transform.Result;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;

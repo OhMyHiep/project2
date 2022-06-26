@@ -3,10 +3,8 @@ package dao;
 import dao.interfaces.BasicCrud;
 import entity.Bug;
 import entity.BugComment;
-import entity.User;
 import utils.JDBCUtils;
 
-import javax.swing.tree.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;

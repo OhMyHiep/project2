@@ -34,6 +34,5 @@ public class Project2 {
         app.get("/bug",BugController.bugList);
         app.post("/bug",BugController.addBug);
         app.patch("/bug",BugController.updateBug);
-
     }
 }
