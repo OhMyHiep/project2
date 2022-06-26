@@ -117,4 +117,34 @@ public class BugCommentDao implements BasicCrud<BugComment> {
     public Integer update(BugComment comment) {
         return null;
     }
+
+    @Override
+    public List<BugComment> getBugByCreatorId(Integer commenterUserId) {
+        JDBCUtils conn = new JDBCUtils();
+        String sql = "SELECT * FROM project2.BugComment WHERE commenterUserId=?";
+
+        ResultSet rs = conn.executeQuery(sql,commenterUserId);
+        List<BugComment> listOfComments = new ArrayList<>();
+        try {
+            while (rs.next()) {
+                listOfComments.add(new BugComment(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(4), rs.getDate(5)));
+            }
+
+            return listOfComments;
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        finally {
+            conn.close();
+        }
+
+        return null;
+
+    }
+
+    @Override
+    public List<BugComment> getBugByAssignee(Integer assignedTo) {
+        return null;
+    }
 }

@@ -19,7 +19,7 @@ public class JDBCUtils {
 		try {
 			Class.forName(DBInfo.JDBC_DRIVER);
 			conn = DriverManager.getConnection(DBInfo.DB_URL, DBInfo.USER, DBInfo.PASSWORD);
-			System.out.println(conn);
+//			System.out.println(conn);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -82,5 +82,20 @@ public class JDBCUtils {
 			}
 		}
 	}
-
+	public void commit(){
+		if(conn!=null){
+			try {
+				conn.commit();
+			}catch (SQLException e){
+				e.printStackTrace();
+			}
+		}
+	}
+	public void setAutoCommit(Boolean truth){
+		try {
+			conn.setAutoCommit(truth);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }

@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
-    private String firstname;
-    private String lastname;
+public class BugCommentDto {
     private String url;
 }
