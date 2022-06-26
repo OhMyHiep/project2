@@ -1,6 +1,7 @@
 package project2;
 
 
+import dao.BugCommentDao;
 import entity.BugComment;
 import net.bytebuddy.utility.RandomString;
 import org.mockito.Mock;
@@ -12,24 +13,26 @@ import org.testng.annotations.Test;
 import service.BugCommentService;
 
 import java.sql.Date;
+import java.util.Random;
 
 import static org.mockito.Mockito.when;
 
 public class TestBugCommentService {
-    @Mock
-    private BugCommentService mockBugCommentService;
+    private BugCommentService bugCommentService;
 
+    @Mock
+    private BugCommentDao mockBugCommentDao;
 
     @BeforeClass
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+        Random rand = new Random();
+        when(mockBugCommentDao.insert(new BugComment())).thenReturn(new Integer(rand.nextInt(500)));
     }
 
     @Test(dataProvider = "commentProvider")
     public void givenComment_WhenCheckLength_ThenAcceptOrDeny(BugComment bugComment, boolean result){
-        when(mockBugCommentService.getCommentLength(bugComment)).thenReturn(result);
-
-        Assert.assertEquals(mockBugCommentService.getCommentLength(bugComment), result);
+        Assert.assertEquals(bugCommentService.getCommentLength(bugComment), result);
     }
 
     @DataProvider

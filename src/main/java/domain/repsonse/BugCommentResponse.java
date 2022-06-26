@@ -1,5 +1,6 @@
 package domain.repsonse;
 
+import entity.dto.BugCommentDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,4 +18,5 @@ public class BugCommentResponse {
     private int commenterId;
     private String commentText;
     private Date commentDate;
+    private BugCommentDto commentDto;
 }

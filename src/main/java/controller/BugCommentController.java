@@ -34,20 +34,11 @@ public class BugCommentController {
         }
     };
 
-    private static Bug deserializeBug(Context ctx) {
-        // Convert JSON to class
-        try {
-            Bug bug = ctx.bodyAsClass(Bug.class);
-            return bug;
-        }
-        catch (Exception e) {
-            return null;
-        }
-    }
-
+    // app.get(bug/:bug_id/comments)
     public static Handler viewAllCommentsRequest = ctx -> {
-        Bug bug = deserializeBug(ctx);
-        List<BugCommentResponse> comments = bugCommentService.getCommentsForBug(bug);
+        Integer id = Integer.parseInt(ctx.pathParam("bug_id"));
+
+        List<BugCommentResponse> comments = bugCommentService.getCommentsForBug(id);
         if (comments != null) {
             ctx.json(comments);
         }

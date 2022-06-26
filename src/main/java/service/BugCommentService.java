@@ -13,6 +13,10 @@ import java.util.List;
 
 public class BugCommentService {
 
+    private BugDaoImpl bugDao = new BugDaoImpl();
+    private BugCommentDao bugCommentDao = new BugCommentDao();
+
+
     public static BugCommentDto BugCommentDtoMapper(BugComment comment){
         return BugCommentDto.builder()
                 .url("/placeholder/"+comment.getCommentId())
@@ -26,6 +30,7 @@ public class BugCommentService {
                 .commenterId(bugComment.getCommenterUserId())
                 .commentText(bugComment.getCommentText())
                 .commentDate(bugComment.getCommentDate())
+                .commentDto(commentDto)
                 .build();
     }
 
@@ -43,7 +48,6 @@ public class BugCommentService {
             boolean lengthValid = getCommentLength(bugComment);
             // Check valid length
             if (lengthValid) {
-                BugCommentDao bugCommentDao = new BugCommentDao();
                 Integer result = bugCommentDao.insert(bugComment);
                 if (result > 0) {
                     return BugCommentResponse.builder()
@@ -56,24 +60,20 @@ public class BugCommentService {
     }
 
     // Send the Bug object to here, since need bug id
-    public List<BugCommentResponse> getCommentsForBug(Bug bugForList) {
-        // Check valid JSON
-        if (bugForList != null) {
-            BugDaoImpl bugDao = new BugDaoImpl();
-            Bug bugExists = bugDao.getById(bugForList.getBug_id());
-            // Check if bug exists
-            if (bugExists != null) {
-                List<BugComment> listOfComments;
-                BugCommentDao bugCommentDao = new BugCommentDao();
-                // Return comments for specific bug
-                listOfComments = bugCommentDao.getAllByBugId(bugExists.getBug_id());
-                //Convert to response
-                List<BugCommentResponse> listOfResponses = new ArrayList<>();
-                for (BugComment comment : listOfComments) {
-                    listOfResponses.add(convertToCommentResponse(comment));
-                }
-                return listOfResponses;
+    public List<BugCommentResponse> getCommentsForBug(Integer bugId) {
+        Bug bugExists = bugDao.getById(bugId);
+        // Check if bug exists
+        if (bugExists != null) {
+            List<BugComment> listOfComments;
+            // Return comments for specific bug
+            listOfComments = bugCommentDao.getAllByBugId(bugExists.getBug_id());
+            //Convert to response
+            List<BugCommentResponse> listOfResponses = new ArrayList<>();
+            for (BugComment comment : listOfComments) {
+                BugCommentDto commentDto = BugCommentDtoMapper(comment);
+                listOfResponses.add(convertToCommentResponse(comment, commentDto));
             }
+            return listOfResponses;
         }
         return null;
 

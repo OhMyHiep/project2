@@ -35,7 +35,7 @@ public class BugCommentDao implements BasicCrud<BugComment> {
     @Override
     public List<BugComment> getAll() {
         JDBCUtils conn = new JDBCUtils();
-        String sql = "SELECT * FROM project2.BugComment";
+        String sql = "SELECT * FROM project2.BugComment;";
 
         ResultSet rs = conn.executeQuery(sql);
         List<BugComment> listOfComments = new ArrayList<>();
@@ -58,7 +58,7 @@ public class BugCommentDao implements BasicCrud<BugComment> {
 
     public List<BugComment> getAllByBugId(Integer id) {
         JDBCUtils conn = new JDBCUtils();
-        String sql = "SELECT * FROM project2.BugComment WHERE bug_id=?";
+        String sql = "SELECT * FROM project2.BugComment WHERE bug_id=?;";
 
         ResultSet rs = conn.executeQuery(sql,id);
         List<BugComment> listOfComments = new ArrayList<>();
@@ -82,7 +82,7 @@ public class BugCommentDao implements BasicCrud<BugComment> {
     @Override
     public Integer deleteById(Integer id) {
         JDBCUtils conn = new JDBCUtils();
-        String sql = "DELETE FROM project2.BugComment WHERE comment_id=?";
+        String sql = "DELETE FROM project2.BugComment WHERE comment_id=?;";
 
         try {
             Integer result = conn.executeUpdate(sql, id);
@@ -96,7 +96,7 @@ public class BugCommentDao implements BasicCrud<BugComment> {
     @Override
     public Integer insert(BugComment comment) {
         JDBCUtils conn = new JDBCUtils();
-        String sql = "INSERT INTO project2.BugComment VALUES (default, ?, ?, ?, ?) RETURNING comment_id";
+        String sql = "INSERT INTO project2.BugComment VALUES (default, ?, ?, ?, ?) RETURNING comment_id;";
 
         ResultSet result = conn.executeQuery(sql, comment.getBugId(), comment.getCommenterUserId(), comment.getCommentText(), comment.getCommentDate());
 
@@ -120,7 +120,7 @@ public class BugCommentDao implements BasicCrud<BugComment> {
 
     public List<BugComment> getBugByCreatorId(Integer commenterUserId) {
         JDBCUtils conn = new JDBCUtils();
-        String sql = "SELECT * FROM project2.BugComment WHERE commenterUserId=?";
+        String sql = "SELECT * FROM project2.BugComment WHERE commenterUserId=?;";
 
         ResultSet rs = conn.executeQuery(sql,commenterUserId);
         List<BugComment> listOfComments = new ArrayList<>();
