@@ -100,20 +100,16 @@ public class BugCommentDao implements BasicCrud<BugComment> {
 
         ResultSet result = conn.executeQuery(sql, comment.getBugId(), comment.getCommenterUserId(), comment.getCommentText(), comment.getCommentDate());
 
-        Integer returnValue = -1;
         try {
             while (result.next()) {
-                result.getInt(returnValue);
+                return result.getInt(1);
             }
-            return returnValue;
-        }
-        catch (SQLException e) {
-
+        } catch (SQLException e) {
+            return -1;
         } finally {
             conn.close();
         }
-
-        return null;
+        return -1;
     }
 
     // Will probably never be used, unless implement comment update but needs interface change

@@ -1,3 +1,6 @@
+
+import controller.BugCommentController;
+import io.javalin.Javalin;
 import com.mitchellbosecke.pebble.PebbleEngine;
 import com.mitchellbosecke.pebble.template.PebbleTemplate;
 import controller.BugController;
@@ -10,20 +13,16 @@ import io.javalin.http.staticfiles.Location;
 import io.javalin.plugin.rendering.JavalinRenderer;
 import io.javalin.plugin.rendering.template.JavalinPebble;
 import service.BugService;
-
 import java.sql.Date;
+
 
 public class Project2 {
     public static void main(String[] args) {
-//        User user=User.builder().
-//                firstname("Hiep").
-//                lastname("Huynh").
-//                build();
-//        System.out.println(user.getFirstname());
-//        BugCommentDao bc = new BugCommentDao();
-//        Integer test = bc.insert(new BugComment(0, 2, 1, "This is a test", new Date(System.currentTimeMillis())));
-//        System.out.println(test);
+        Javalin app = Javalin.create().start(9090);
 
+        // later will be bug/{bug_id}/comments
+        app.post("/comments", BugCommentController.viewAllCommentsRequest);
+        app.post("/comments/new-comment", BugCommentController.createCommentRequest);
         BugDaoImpl bugDao= new BugDaoImpl();
         BugService bugService=new BugService();
 //        System.out.println( bugDao.deleteById(8));
@@ -53,7 +52,5 @@ public class Project2 {
         app.post("/bug",BugController.addBug);
         app.patch("/bug",BugController.updateBug);
 
-
     }
-
 }
