@@ -18,5 +18,5 @@ public class BugCommentResponse {
     private int commenterId;
     private String commentText;
     private Date commentDate;
-    private BugCommentDto commentDto;
+    private BugCommentDto commentUrl;
 }

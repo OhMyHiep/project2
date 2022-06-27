@@ -15,9 +15,8 @@ public class BugCommentDao implements BasicCrud<BugComment> {
         JDBCUtils conn = new JDBCUtils();
         String sql = "SELECT * FROM project2.BugComment WHERE comment_id=?;";
 
-        ResultSet rs = conn.executeQuery(sql, id);
-
         try {
+            ResultSet rs = conn.executeQuery(sql, id);
             while (rs.next()) {
                 return new BugComment(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(4), rs.getDate(5));
             }
@@ -37,9 +36,9 @@ public class BugCommentDao implements BasicCrud<BugComment> {
         JDBCUtils conn = new JDBCUtils();
         String sql = "SELECT * FROM project2.BugComment;";
 
-        ResultSet rs = conn.executeQuery(sql);
         List<BugComment> listOfComments = new ArrayList<>();
         try {
+            ResultSet rs = conn.executeQuery(sql);
             while (rs.next()) {
                 listOfComments.add(new BugComment(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(4), rs.getDate(5)));
             }
@@ -60,9 +59,9 @@ public class BugCommentDao implements BasicCrud<BugComment> {
         JDBCUtils conn = new JDBCUtils();
         String sql = "SELECT * FROM project2.BugComment WHERE bug_id=?;";
 
-        ResultSet rs = conn.executeQuery(sql,id);
         List<BugComment> listOfComments = new ArrayList<>();
         try {
+            ResultSet rs = conn.executeQuery(sql,id);
             while (rs.next()) {
                 listOfComments.add(new BugComment(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(4), rs.getDate(5)));
             }
@@ -98,9 +97,11 @@ public class BugCommentDao implements BasicCrud<BugComment> {
         JDBCUtils conn = new JDBCUtils();
         String sql = "INSERT INTO project2.BugComment VALUES (default, ?, ?, ?, ?) RETURNING comment_id;";
 
-        ResultSet result = conn.executeQuery(sql, comment.getBugId(), comment.getCommenterUserId(), comment.getCommentText(), comment.getCommentDate());
-
         try {
+            ResultSet result = conn.executeQuery(sql, comment.getBugId(), comment.getCommenterUserId(), comment.getCommentText(), comment.getCommentDate());
+            if (result == null) {
+                return -1;
+            }
             while (result.next()) {
                 return result.getInt(1);
             }

@@ -1,4 +1,4 @@
-package project2;
+package serviceTest;
 
 
 import dao.BugCommentDao;
@@ -9,22 +9,17 @@ import entity.Bug;
 import entity.BugComment;
 import entity.User;
 import entity.dto.BugCommentDto;
-import net.bytebuddy.utility.RandomString;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import service.BugCommentService;
 
-import java.security.PublicKey;
-import java.sql.Date;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
@@ -47,14 +42,9 @@ public class TestBugCommentService {
     private BugCommentResponse commentResponse;
     private User user1;
 
-    private List<BugComment> bugCommentList;
-    private List<BugCommentResponse> bugCommentResponseList;
-
     @BeforeClass
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        bugCommentList = new ArrayList<>();
-        bugCommentResponseList = new ArrayList<>();
     }
 
     @BeforeMethod
@@ -62,23 +52,20 @@ public class TestBugCommentService {
         user1 = User.builder().user_id(1).firstname("John").lastname("Smith").username("JohnS").passwd("12345").authToken("yo").build();
         bug = Bug.builder().bug_id(1).creator_id(1).description("Won't run with dependencies").build();
 
-        comment = BugComment.builder().commentId(1).bugId(1).commenterUserId(1).commentText("Maybe try and reload the pom file").commentDate(new Date(System.currentTimeMillis())).build();
-
-        bugCommentList.add(comment);
+        comment = BugComment.builder().commentId(1).bugId(1).commenterUserId(1).commentText("Maybe try and reload the pom file").commentDate(null).build();
 
         BugCommentDto bugCommentDto = bugCommentService.BugCommentDtoMapper(comment);
-        commentResponse = BugCommentResponse.builder().commentId(comment.getCommentId()).bugId(comment.getBugId()).commenterId(comment.getCommenterUserId()).commentText(comment.getCommentText()).commentDate(comment.getCommentDate()).commentDto(bugCommentDto).build();
-
-        bugCommentResponseList.add(commentResponse);
+        commentResponse = BugCommentResponse.builder().commentId(comment.getCommentId()).bugId(comment.getBugId()).commenterId(comment.getCommenterUserId()).commentText(comment.getCommentText()).commentDate(comment.getCommentDate()).commentUrl(bugCommentDto).build();
     }
 
     @Test
     public void testGetBugIdComments_Success() {
-        when(mockBugCommentDao.getAllByBugId(1)).thenReturn(bugCommentList);
+        when(mockBugCommentDao.getAllByBugId(1)).thenReturn(Arrays.asList(comment));
         when(mockBugDao.getById(1)).thenReturn(bug);
 
         List<BugCommentResponse> commentList = bugCommentService.getCommentsForBug(1);
-        Assert.assertEquals(commentList, bugCommentResponseList);
+        comment.setCommentDate(commentList.get(0).getCommentDate());
+        Assert.assertEquals(commentList, Arrays.asList(commentResponse));
     }
     @Test
     public void testGetBugIdComments_Failure_notExisting1() {
@@ -105,6 +92,7 @@ public class TestBugCommentService {
         when(mockUserDao.getById(1)).thenReturn(user1);
 
         BugCommentResponse res = bugCommentService.createComment(comment);
+        commentResponse.setCommentDate(res.getCommentDate());
         Assert.assertEquals(res, commentResponse);
     }
 
@@ -118,9 +106,15 @@ public class TestBugCommentService {
         Assert.assertEquals(res, null);
     }
 
-    @Test(dataProvider = "commentProvider", dataProviderClass = BugCommentServiceDataProvider.class)
+    @Test(dataProvider = "commentLengthProvider", dataProviderClass = BugCommentServiceDataProvider.class)
     public void givenComment_WhenCheckLength_ThenAcceptOrDeny(BugComment bugComment, boolean result){
         Assert.assertEquals(bugCommentService.getCommentLength(bugComment), result);
     }
 
+    @Test(dataProvider = "commentInvalidInputProvider", dataProviderClass = BugCommentServiceDataProvider.class)
+    public void givenComment_WhenCheckValid_ThenAcceptOrDeny(BugComment bugComment, boolean result, User outputUser, Bug outputBug){
+        when(mockBugDao.getById(bugComment.getBugId())).thenReturn(outputBug);
+        when(mockUserDao.getById(bugComment.getCommenterUserId())).thenReturn(outputUser);
+        Assert.assertEquals(bugCommentService.validateValidInputForComments(bugComment), result);
+    }
 }
