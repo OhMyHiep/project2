@@ -2,83 +2,125 @@ package project2;
 
 
 import dao.BugCommentDao;
+import dao.BugDaoImpl;
+import dao.UserDao;
+import domain.repsonse.BugCommentResponse;
+import entity.Bug;
 import entity.BugComment;
+import entity.User;
+import entity.dto.BugCommentDto;
 import net.bytebuddy.utility.RandomString;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import service.BugCommentService;
 
+import java.security.PublicKey;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 public class TestBugCommentService {
+    @InjectMocks
     private BugCommentService bugCommentService;
 
     @Mock
     private BugCommentDao mockBugCommentDao;
 
+    @Mock
+    private BugDaoImpl mockBugDao;
+
+    @Mock
+    private UserDao mockUserDao;
+
+    private Bug bug;
+    private BugComment comment;
+    private BugCommentResponse commentResponse;
+    private User user1;
+
+    private List<BugComment> bugCommentList;
+    private List<BugCommentResponse> bugCommentResponseList;
+
     @BeforeClass
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        Random rand = new Random();
-        when(mockBugCommentDao.insert(new BugComment())).thenReturn(new Integer(rand.nextInt(500)));
+        bugCommentList = new ArrayList<>();
+        bugCommentResponseList = new ArrayList<>();
     }
 
-    @Test(dataProvider = "commentProvider")
+    @BeforeMethod
+    public void setUpObjects() {
+        user1 = User.builder().user_id(1).firstname("John").lastname("Smith").username("JohnS").passwd("12345").authToken("yo").build();
+        bug = Bug.builder().bug_id(1).creator_id(1).description("Won't run with dependencies").build();
+
+        comment = BugComment.builder().commentId(1).bugId(1).commenterUserId(1).commentText("Maybe try and reload the pom file").commentDate(new Date(System.currentTimeMillis())).build();
+
+        bugCommentList.add(comment);
+
+        BugCommentDto bugCommentDto = bugCommentService.BugCommentDtoMapper(comment);
+        commentResponse = BugCommentResponse.builder().commentId(comment.getCommentId()).bugId(comment.getBugId()).commenterId(comment.getCommenterUserId()).commentText(comment.getCommentText()).commentDate(comment.getCommentDate()).commentDto(bugCommentDto).build();
+
+        bugCommentResponseList.add(commentResponse);
+    }
+
+    @Test
+    public void testGetBugIdComments_Success() {
+        when(mockBugCommentDao.getAllByBugId(1)).thenReturn(bugCommentList);
+        when(mockBugDao.getById(1)).thenReturn(bug);
+
+        List<BugCommentResponse> commentList = bugCommentService.getCommentsForBug(1);
+        Assert.assertEquals(commentList, bugCommentResponseList);
+    }
+    @Test
+    public void testGetBugIdComments_Failure_notExisting1() {
+        when(mockBugCommentDao.getAllByBugId(-1)).thenReturn(null);
+        when(mockBugDao.getById(-1)).thenReturn(null);
+
+        List<BugCommentResponse> commentList = bugCommentService.getCommentsForBug(-1);
+        Assert.assertEquals(commentList, null);
+    }
+
+    @Test
+    public void testGetBugIdComments_Failure_notExisting2() {
+        when(mockBugCommentDao.getAllByBugId(4000)).thenReturn(null);
+        when(mockBugDao.getById(4000)).thenReturn(null);
+
+        List<BugCommentResponse> commentList = bugCommentService.getCommentsForBug(4000);
+        Assert.assertEquals(commentList, null);
+    }
+
+    @Test
+    public void testAddComment_Success() {
+        when(mockBugCommentDao.insert(comment)).thenReturn(1);
+        when(mockBugDao.getById(1)).thenReturn(bug);
+        when(mockUserDao.getById(1)).thenReturn(user1);
+
+        BugCommentResponse res = bugCommentService.createComment(comment);
+        Assert.assertEquals(res, commentResponse);
+    }
+
+    @Test(dataProvider = "commentFailureProvider", dataProviderClass = BugCommentServiceDataProvider.class)
+    public void testAddComment_Failure_NotExisting(BugComment bugComment, Bug resultBug, User resultUser) {
+        when(mockBugCommentDao.insert(bugComment)).thenReturn(anyInt());
+        when(mockBugDao.getById(bugComment.getBugId())).thenReturn(resultBug);
+        when(mockUserDao.getById(bugComment.getCommenterUserId())).thenReturn(resultUser);
+
+        BugCommentResponse res = bugCommentService.createComment(bugComment);
+        Assert.assertEquals(res, null);
+    }
+
+    @Test(dataProvider = "commentProvider", dataProviderClass = BugCommentServiceDataProvider.class)
     public void givenComment_WhenCheckLength_ThenAcceptOrDeny(BugComment bugComment, boolean result){
         Assert.assertEquals(bugCommentService.getCommentLength(bugComment), result);
     }
 
-    @DataProvider
-    public Object[][] commentProvider() {
-        Object[][] data = new Object[4][2];
-
-        // 1st row
-        data[0][0] = BugComment.builder()
-                .commentId(1)
-                .bugId(1)
-                .commenterUserId(1)
-                .commentText("Hello there this is a comment")
-                .commentDate(new Date(System.currentTimeMillis()))
-                .build();
-        data[0][1] = true;
-
-        //2nd row
-        data[1][0] = BugComment.builder()
-                .commentId(70)
-                .bugId(3)
-                .commenterUserId(40)
-                .commentText("No way")
-                .commentDate(new Date(System.currentTimeMillis()))
-                .build();
-        data[1][1] = false;
-
-        // 3rd row
-        data[2][0] = BugComment.builder()
-                .commentId(23)
-                .bugId(48)
-                .commenterUserId(12)
-                .commentText("")
-                .commentDate(new Date(System.currentTimeMillis()))
-                .build();
-        data[2][1] = false;
-
-        // 4th row
-        data[3][0] = BugComment.builder()
-                .commentId(2)
-                .bugId(98)
-                .commenterUserId(34)
-                .commentText(RandomString.make(1000))
-                .commentDate(new Date(System.currentTimeMillis()))
-                .build();
-        data[3][1] = false;
-
-        return data;
-    }
 }

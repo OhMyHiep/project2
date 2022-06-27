@@ -2,12 +2,15 @@ package service;
 
 import dao.BugCommentDao;
 import dao.BugDaoImpl;
+import dao.UserDao;
 import domain.repsonse.BugCommentResponse;
 import entity.Bug;
 import entity.BugComment;
+import entity.User;
 import entity.dto.BugCommentDto;
 
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +18,7 @@ public class BugCommentService {
 
     private BugDaoImpl bugDao = new BugDaoImpl();
     private BugCommentDao bugCommentDao = new BugCommentDao();
+    private UserDao userDao = new UserDao();
 
 
     public static BugCommentDto BugCommentDtoMapper(BugComment comment){
@@ -43,15 +47,23 @@ public class BugCommentService {
     }
 
     public BugCommentResponse createComment(BugComment bugComment) {
-        // Checks if valid json
-        if (bugComment != null) {
+        Bug bugExists = bugDao.getById(bugComment.getBugId());
+        User commenterExists = userDao.getById(bugComment.getCommenterUserId());
+        //date has valid format
+        if (bugComment != null && bugExists != null && commenterExists != null) {
             boolean lengthValid = getCommentLength(bugComment);
             // Check valid length
             if (lengthValid) {
                 Integer result = bugCommentDao.insert(bugComment);
                 if (result > 0) {
+                    BugCommentDto dtoComment = BugCommentDtoMapper(bugComment);
                     return BugCommentResponse.builder()
                             .commentId(result)
+                            .bugId(bugComment.getBugId())
+                            .commenterId(bugComment.getCommenterUserId())
+                            .commentText(bugComment.getCommentText())
+                            .commentDate(bugComment.getCommentDate())
+                            .commentDto(dtoComment)
                             .build();
                 }
             }
