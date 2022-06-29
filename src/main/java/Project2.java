@@ -46,7 +46,7 @@ public class Project2 {
         app.start();
 
         app.get("/", ctx->{
-            ctx.render("login.html");
+            ctx.render("bug.html");
         });
         app.get("bug/{bug_id}/comments", BugCommentController.viewAllCommentsRequest);
         app.post("bug/{bug_id}/comments", BugCommentController.createCommentRequest);
