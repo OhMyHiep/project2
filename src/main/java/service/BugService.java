@@ -14,6 +14,7 @@ import entity.dto.UserDto;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -71,6 +72,16 @@ public class BugService {
     }
 
     public BugListResponse insert(Bug bug) {
+        if(bug==null
+                ||!descriptionIsValidForInsert(bug.getDescription())
+                ||!severityIsValidForInsert(bug.getSeverity())
+                ||!urgencyIsValidForInsert(bug.getUrgency()) ||
+                !creator_idIsValidForInsert(bug.getCreator_id())
+        ) return null;
+
+        bug.setStatus(1);
+        bug.setIssueDate(new java.sql.Date(new Date().getTime()));
+        bug.setDescription(bug.getDescription().trim());
         Bug insertedBug = Bug.builder()
                 .bug_id(bugDao.insert(bug))
                 .build();
@@ -83,9 +94,15 @@ public class BugService {
     }
 
     public BugListResponse update(Bug bug){
-        if (bug.getBug_id()==null) return null;
+        if (!idIsValidForUpdate(bug.getBug_id())
+                || !statusIsValidForUpdate(bug.getStatus())
+                || !severityIsValidForUpdate(bug.getSeverity())
+                || !urgencyIsValidForUpdate(bug.getUrgency())
+                || !descriptionIsValidForUpdate(bug.getDescription())
+        )return null;
         Bug queryBug=bugDao.getById(bug.getBug_id());
         if (queryBug==null) return null;
+        if(bug.getAssigned_to()!=null && assigned_toIsValidForUpdate(bug.getAssigned_to())) bug.setAssignDate(new java.sql.Date(System.currentTimeMillis()));
         transferAttributes(bug,queryBug);
         if(bug.getAssigned_to()==null || bug.getAssigned_to()==0) bug.setAssigned_to(null);
 
@@ -106,7 +123,7 @@ public class BugService {
         Bug deletedBug= Bug.builder()
                 .bug_id(bugDao.deleteById(id))
                 .build();
-        if (deletedBug==null) return null;
+        if (deletedBug.getBug_id()==null) return null;
 
          return BugListResponse.builder()
                 .bugs(
@@ -142,4 +159,60 @@ public class BugService {
         }
     }
 
+    public boolean descriptionIsValidForInsert(String description){
+        if(description!=null && description.trim().length()>=50 && description.trim().length()<=1000) return true;
+        return false;
+    }
+
+    public boolean urgencyIsValidForInsert(Integer urgency){
+        if(urgency==null) return false;
+        else if(urgency>=1 && urgency<=9) return true;
+        else return false;
+    }
+
+    public boolean severityIsValidForInsert(Integer severity){
+        if(severity==null) return false;
+        else if(severity>=1 && severity<=9) return true;
+        else return false;
+    }
+    public boolean idIsValidForUpdate(Integer bug_id){
+        if (bug_id==null) return false;
+        else return true;
+    }
+
+    public boolean assigned_toIsValidForUpdate(Integer assigned_to){
+        if(userDao.getById(assigned_to)!=null) return true;
+        else return false;
+    }
+
+    public boolean statusIsValidForUpdate(Integer status) {
+        if(status==null) return true;
+        else if(status>=1 && status<=4) return true;
+        else return false;
+    }
+
+    public boolean creator_idIsValidForInsert(Integer creator_id){
+        if(creator_id==null) return false;
+        else if(userDao.getById(creator_id)!=null) return true;
+        else return false;
+    }
+
+
+    public boolean descriptionIsValidForUpdate(String description){
+        if (description==null) return true;
+        if(description.trim().length()>=50 && description.trim().length()<=1000) return true;
+        return false;
+    }
+
+    public boolean severityIsValidForUpdate(Integer severity){
+        if(severity==null) return true;
+        else if(severity>=1 && severity<=9) return true;
+        else return false;
+    }
+
+    public boolean urgencyIsValidForUpdate(Integer urgency){
+       if(urgency==null) return true;
+        if(urgency>=1 && urgency<=9) return true;
+        else return false;
+    }
 }

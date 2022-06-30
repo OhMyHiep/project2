@@ -3,6 +3,7 @@ package dao;
 import dao.interfaces.BasicCrud;
 import entity.Bug;
 import entity.BugComment;
+import org.jetbrains.annotations.NotNull;
 import utils.JDBCUtils;
 
 import java.sql.ResultSet;
@@ -71,13 +72,13 @@ public class BugDaoImpl implements BasicCrud<Bug> {
 
     @Override
     public Integer insert(Bug bug) {
+        String bug_id= bug.getBug_id()==null? "default": bug.getBug_id()+"";
         String sql= "INSERT INTO project2.bug " +
-                "(issue_date,assign_date,close_date,assigned_to,creator_id,description,status,urgency,severity) " +
-                "VALUES (?,?,?,?,?,?,?,?,?) RETURNING *";
+                "(bug_id,issue_date,assigned_to,creator_id,description,status,urgency,severity) " +
+                "VALUES (?,?,?,?,?,?,?,?) RETURNING *";
         ResultSet rs = jdbcUtils.executeQuery(sql,
+                Integer.parseInt(bug_id),
                 bug.getIssueDate(),
-                bug.getAssignDate(),
-                bug.getCloseDate(),
                 bug.getAssigned_to(),
                 bug.getCreator_id(),
                 bug.getDescription(),
@@ -92,12 +93,11 @@ public class BugDaoImpl implements BasicCrud<Bug> {
     @Override
     public Integer update(Bug bug) {
         String sql= "UPDATE project2.bug " +
-                "SET issue_date=?,assign_date=?,close_date=?, assigned_to=?,description=?,status=?,urgency=?,severity=? " +
+                "SET assign_date=?,close_date=?, assigned_to=?,description=?,status=?,urgency=?,severity=? " +
                 "WHERE bug_id=? " +
                 "RETURNING *";
 
         return rowMapper(jdbcUtils.executeQuery(sql,
-                bug.getIssueDate(),
                 bug.getAssignDate(),
                 bug.getCloseDate(),
                 bug.getAssigned_to(),
@@ -118,17 +118,6 @@ public class BugDaoImpl implements BasicCrud<Bug> {
         return rowMapper(rs);
     }
 
-
-    private BugComment commentRowMapper(ResultSet rs){
-        try {
-            if(rs.next())
-                return new BugComment(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(4), rs.getDate(5));
-            else return null;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public void commitTransaction(){
         jdbcUtils.commit();
     }
@@ -140,6 +129,11 @@ public class BugDaoImpl implements BasicCrud<Bug> {
                 "FROM bug;"+
                 "where creator_id=?";
 
+        return getBugs(creator_id, sql);
+    }
+
+    @NotNull
+    private List<Bug> getBugs(Integer creator_id, String sql) {
         ResultSet rs = jdbcUtils.executeQuery(sql,creator_id);
         Bug bug= rowMapper(rs);
         ArrayList<Bug> bugs= new ArrayList<>();
@@ -153,16 +147,9 @@ public class BugDaoImpl implements BasicCrud<Bug> {
 
     public List<Bug> getBugByAssignee(Integer assignedTo) {
         String sql = "SELECT *" +
-                "FROM bug;"+
-                "where assignedTo=?";
+                "FROM project2.bug;"+
+                "where assigned_to=?";
 
-        ResultSet rs = jdbcUtils.executeQuery(sql,assignedTo);
-        Bug bug= rowMapper(rs);
-        ArrayList<Bug> bugs= new ArrayList<>();
-        while (bug!=null) {
-            bugs.add(bug);
-            bug=rowMapper(rs);
-        }
-        return bugs;
+        return getBugs(assignedTo, sql);
     }
 }

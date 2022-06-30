@@ -8,10 +8,11 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Date;
 
-@Data
+
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class Bug {
     private Integer bug_id;
     private Date assignDate;
@@ -23,4 +24,19 @@ public class Bug {
     private Integer urgency;
     private Integer assigned_to;
     private Integer severity;
+
+//    @Override
+//    public boolean equals(Object obj){
+//        if(obj instanceof Bug){
+//            Bug otherBug= (Bug)obj;
+//            return this.bug_id==otherBug.getBug_id()
+//                    && this.assignDate==null? otherBug.getAssignDate()==null:this.assignDate.equals(otherBug.getAssignDate())
+//                    && this.issueDate==null? otherBug.issueDate
+//        }
+//    }
+//
+//    @Override
+//    public int hashCode(){
+//        return bug_id;
+//    }
 }
