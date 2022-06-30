@@ -14,6 +14,7 @@ async function get_comments_by_id(){
         // const res = await fetch(`bug/${bugId}/comments`)
         const res = await fetch(`bug/2/comments`)
         const commentJson = await res.json()
+        console.log(commentJson)
         if (res.status != 200){
             const message = `Couldn't obtain requests! An error occured: ${res.status}`
             throw message

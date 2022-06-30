@@ -7,6 +7,7 @@ import dao.UserDao;
 import domain.repsonse.BugListResponse;
 import domain.repsonse.BugResponse;
 import entity.Bug;
+import entity.User;
 import entity.dto.BugDto;
 import entity.dto.BugCommentDto;
 import entity.dto.UserDto;
@@ -56,8 +57,11 @@ public class BugService {
                 .map(bugComment ->BugCommentService.BugCommentDtoMapper(bugComment))
                 .collect(Collectors.toList());
         UserDto creator= UserService.userDtoMapper(userDao.getById(bug.getCreator_id()));
-        UserDto assigned_to= UserService.userDtoMapper(userDao.getById(bug.getAssigned_to()));
+//        UserDto assigned_to= UserService.userDtoMapper(userDao.getById(bug.getAssigned_to()));
+        User assignee= userDao.getById(bug.getAssigned_to());
+        UserDto assigned_to= assignee==null?null: UserService.userDtoMapper(assignee);
         return bugResponseMapper(bug,bugDto,commentDtos,creator,assigned_to);
+
     }
 
     public BugListResponse getAll() {
@@ -158,6 +162,25 @@ public class BugService {
             }
         }
     }
+
+
+
+    public BugResponse getByAssignee(Integer assignedTo) {
+        if (assignedTo==null) return null;
+        Bug bug =bugDao.getBugByAssignee(assignedTo);
+        if (bug==null) return null;
+        BugDto bugDto= bugDtoMapper(bug);
+        List<BugCommentDto> commentDtos= bugCommentDao.getAllByBugId(bug.getBug_id()).stream()
+                .map(bugComment ->BugCommentService.BugCommentDtoMapper(bugComment))
+                .collect(Collectors.toList());
+        UserDto creator= UserService.userDtoMapper(userDao.getById(bug.getCreator_id()));
+//        UserDto assigned_to= UserService.userDtoMapper(userDao.getById(bug.getAssigned_to()));
+        User assignee= userDao.getById(bug.getAssigned_to());
+        UserDto assigned_to= assignee==null?null: UserService.userDtoMapper(assignee);
+        return bugResponseMapper(bug,bugDto,commentDtos,creator,assigned_to);
+
+    }
+
 
     public boolean descriptionIsValidForInsert(String description){
         if(description!=null && description.trim().length()>=50 && description.trim().length()<=1000) return true;

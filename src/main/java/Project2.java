@@ -55,13 +55,14 @@ public class Project2 {
         app.get("/view", ctx->{
             ctx.render("bugView.html");
         });
-//        app.delete("/bug/:bug_id",BugController.deleteBugById);
-//        app.get("/bug/:bug_id", BugController.getBugById);
+        app.delete("/bug/{bug_id}",BugController.deleteBugById);
+        app.get("/bug/{bug_id}", BugController.getBugById);
 
         app.get("/bug",BugController.bugList);
         app.post("/bug",BugController.addBug);
         app.patch("/bug",BugController.updateBug);
         app.get("/comments/{bug_id}",BugCommentController.viewAllCommentsRequest);
         app.post("/comments",BugCommentController.createCommentRequest);
+        app.get("/bug/assign/{assignedTo}",BugController.bugsByAssignee);
     }
 }
