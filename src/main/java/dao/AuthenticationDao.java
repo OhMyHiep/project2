@@ -35,6 +35,8 @@ public class AuthenticationDao {
         } catch (Exception e) {}
 
         if (results.size() == 1) {
+            String qry2 = "SELECT role_id FROM project2.userroles WHERE";
+
             Key hmacKey = new SecretKeySpec(Base64.getDecoder().decode(Constants.secretKey),
                     SignatureAlgorithm.HS256.getJcaName());
 
