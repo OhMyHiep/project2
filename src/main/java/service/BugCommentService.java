@@ -8,6 +8,7 @@ import entity.Bug;
 import entity.BugComment;
 import entity.User;
 import entity.dto.BugCommentDto;
+import entity.dto.UserDto;
 
 
 import java.sql.Date;
@@ -27,11 +28,12 @@ public class BugCommentService {
                 .build();
     }
 
-    private BugCommentResponse convertToCommentResponse(BugComment bugComment, BugCommentDto commentDto) {
+    private BugCommentResponse convertToCommentResponse(BugComment bugComment, BugCommentDto commentDto, UserDto userDto) {
         return BugCommentResponse.builder()
                 .commentId(bugComment.getCommentId())
                 .bugId(bugComment.getBugId())
                 .commenterId(bugComment.getCommenterUserId())
+                .userUrl(userDto)
                 .commentText(bugComment.getCommentText())
                 .commentDate(bugComment.getCommentDate())
                 .commentUrl(commentDto)
@@ -47,7 +49,8 @@ public class BugCommentService {
     }
 
     public BugCommentResponse createComment(BugComment bugComment) {
-        if (bugComment != null && validateValidInputForComments(bugComment)) {
+        User commenterExists = userDao.getById(bugComment.getCommenterUserId());
+        if (bugComment != null && validateValidInputForComments(bugComment, commenterExists)) {
             boolean lengthValid = getCommentLength(bugComment);
             // Check valid length
             if (lengthValid) {
@@ -56,10 +59,12 @@ public class BugCommentService {
                 Integer result = bugCommentDao.insert(bugComment);
                 if (result > 0) {
                     BugCommentDto dtoComment = BugCommentDtoMapper(bugComment);
+                    UserDto dtoUser = UserService.userDtoMapper(commenterExists);
                     return BugCommentResponse.builder()
                             .commentId(result)
                             .bugId(bugComment.getBugId())
                             .commenterId(bugComment.getCommenterUserId())
+                            .userUrl(dtoUser)
                             .commentText(bugComment.getCommentText())
                             .commentDate(bugComment.getCommentDate())
                             .commentUrl(dtoComment)
@@ -70,12 +75,12 @@ public class BugCommentService {
         return null;
     }
 
-    public boolean validateValidInputForComments(BugComment bugComment) {
+    public boolean validateValidInputForComments(BugComment bugComment, User user) {
         Bug bugExists = bugDao.getById(bugComment.getBugId());
         // How do you make sure that's the user that's logged in
-        User commenterExists = userDao.getById(bugComment.getCommenterUserId());
 
-        if (bugExists != null && commenterExists != null) {
+
+        if (bugExists != null && user != null) {
             return true;
         }
         return false;
@@ -94,7 +99,9 @@ public class BugCommentService {
             if (listOfComments.size() > 0) {
                 for (BugComment comment : listOfComments) {
                     BugCommentDto commentDto = BugCommentDtoMapper(comment);
-                    listOfResponses.add(convertToCommentResponse(comment, commentDto));
+                    User userExists = userDao.getById(comment.getCommenterUserId());
+                    UserDto userDto = UserService.userDtoMapper(userExists);
+                    listOfResponses.add(convertToCommentResponse(comment, commentDto, userDto));
                 }
             }
             return listOfResponses;
@@ -104,9 +111,10 @@ public class BugCommentService {
 
     public BugCommentResponse getCommentById(Integer commentId) {
         BugComment comment = bugCommentDao.getById(commentId);
+        User user = userDao.getById(comment.getCommenterUserId());
 
         if (comment != null) {
-            BugCommentResponse res = convertToCommentResponse(comment, BugCommentDtoMapper(comment));
+            BugCommentResponse res = convertToCommentResponse(comment, BugCommentDtoMapper(comment), UserService.userDtoMapper(user));
             return res;
         }
         return null;
