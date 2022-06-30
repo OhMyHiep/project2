@@ -68,7 +68,7 @@ public class TestBugService {
         validBugDto=BugService.bugDtoMapper(validBug);
         validBugListResponse= BugListResponse.builder()
                 .bugs(
-                        new ArrayList<>(Arrays.asList(BugService.bugDtoMapper(validBug))))
+                        new ArrayList<>(Arrays.asList()))
                 .build();
 
         validUserDto= UserService.userDtoMapper(validUser);

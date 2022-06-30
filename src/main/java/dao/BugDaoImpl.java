@@ -49,8 +49,7 @@ public class BugDaoImpl implements BasicCrud<Bug> {
     @Override
     public List<Bug> getAll() {
         String sql = "SELECT *" +
-                "FROM bug;";
-
+                "FROM project2.bug;";
         ResultSet rs = jdbcUtils.executeQuery(sql);
         Bug bug= rowMapper(rs);
         ArrayList<Bug> bugs= new ArrayList<>();

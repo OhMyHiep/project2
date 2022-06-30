@@ -7,6 +7,7 @@ import dao.UserDao;
 import domain.repsonse.BugListResponse;
 import domain.repsonse.BugResponse;
 import entity.Bug;
+import entity.User;
 import entity.dto.BugDto;
 import entity.dto.BugCommentDto;
 import entity.dto.UserDto;
@@ -56,7 +57,8 @@ public class BugService {
                 .map(bugComment ->BugCommentService.BugCommentDtoMapper(bugComment))
                 .collect(Collectors.toList());
         UserDto creator= UserService.userDtoMapper(userDao.getById(bug.getCreator_id()));
-        UserDto assigned_to= UserService.userDtoMapper(userDao.getById(bug.getAssigned_to()));
+        User assignee= userDao.getById(bug.getAssigned_to());
+        UserDto assigned_to= assignee==null?null: UserService.userDtoMapper(assignee);
         return bugResponseMapper(bug,bugDto,commentDtos,creator,assigned_to);
     }
 
