@@ -1,13 +1,20 @@
 package dao;
 
+import io.jsonwebtoken.Jwts;
 import org.jetbrains.annotations.Nullable;
+import utils.Constants;
 import utils.Cryptographer;
 import utils.JDBCUtils;
 
 import java.sql.ResultSet;
+import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Random;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
+
+import io.jsonwebtoken.SignatureAlgorithm;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.Key;
 
 public class AuthenticationDao {
 
@@ -27,22 +34,21 @@ public class AuthenticationDao {
             }
         } catch (Exception e) {}
 
-        String qry2 = "UPDATE project2.Users SET authtoken=? WHERE user_id=?;";
-
         if (results.size() == 1) {
-            Random rand = new Random();
-            String authToken = Cryptographer.MD5(Integer.valueOf(rand.nextInt()).toString()+
-                    LocalDateTime.now().toString());
+            Key hmacKey = new SecretKeySpec(Base64.getDecoder().decode(Constants.secretKey),
+                    SignatureAlgorithm.HS256.getJcaName());
 
-            try {
+            Instant now = Instant.now();
+            String jwtToken = Jwts.builder()
+                    .claim("username", username)
+                    .setSubject("JWT Auth")
+                    .setId(UUID.randomUUID().toString())
+                    .setIssuedAt(Date.from(now))
+                    .setExpiration(Date.from(now.plus(50, ChronoUnit.MINUTES)))
+                    .signWith(hmacKey)
+                    .compact();
 
-                dbUtil.executeQuery(qry2, authToken, results.get(0));
-
-            } catch(Exception e) {
-                return null;
-            }
-
-            return authToken;
+            return jwtToken;
         } else {
             return null;
         }

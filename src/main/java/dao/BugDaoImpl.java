@@ -2,7 +2,6 @@ package dao;
 
 import dao.interfaces.BasicCrud;
 import entity.Bug;
-import entity.BugComment;
 import org.jetbrains.annotations.NotNull;
 import utils.JDBCUtils;
 
