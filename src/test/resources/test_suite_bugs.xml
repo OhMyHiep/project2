@@ -1,0 +1,7 @@
+<suite name="Testing bugs suite">
+    <test name="Testing bug CRUD">
+        <classes>
+            <class name="project2.TestBugService"/>
+        </classes>
+    </test>
+</suite>
