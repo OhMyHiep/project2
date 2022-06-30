@@ -72,10 +72,12 @@ public class BugDaoImpl implements BasicCrud<Bug> {
 
     @Override
     public Integer insert(Bug bug) {
+        String bug_id= bug.getBug_id()==null? "default": bug.getBug_id()+"";
         String sql= "INSERT INTO project2.bug " +
-                "(issue_date,assigned_to,creator_id,description,status,urgency,severity) " +
-                "VALUES (?,?,?,?,?,?,?) RETURNING *";
+                "(bug_id,issue_date,assigned_to,creator_id,description,status,urgency,severity) " +
+                "VALUES (?,?,?,?,?,?,?,?) RETURNING *";
         ResultSet rs = jdbcUtils.executeQuery(sql,
+                Integer.parseInt(bug_id),
                 bug.getIssueDate(),
                 bug.getAssigned_to(),
                 bug.getCreator_id(),
