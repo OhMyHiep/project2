@@ -26,9 +26,7 @@ hs_err_pid*
 .idea
 *.iml
 
-<<<<<<< HEAD
 # Target Folder
-=======
-#Target folder
->>>>>>> 3154148e18250033005609453c947fcdce46ac34
 target
+SecondMain.java
+SecondMain

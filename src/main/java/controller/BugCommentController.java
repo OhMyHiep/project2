@@ -24,6 +24,7 @@ public class BugCommentController {
 
     public static Handler createCommentRequest = ctx -> {
         BugComment bugComment = deserializeComment(ctx);
+        System.out.println(bugComment);
         BugCommentResponse creationResult = bugCommentService.createComment(bugComment);
         if (creationResult != null) {
             ctx.json(creationResult);
@@ -36,7 +37,7 @@ public class BugCommentController {
 
     public static Handler viewAllCommentsRequest = ctx -> {
         Integer id = Integer.parseInt(ctx.pathParam("bug_id"));
-
+        System.out.println(id);
         List<BugCommentResponse> comments = bugCommentService.getCommentsForBug(id);
         if (comments != null) {
             ctx.json(comments);
