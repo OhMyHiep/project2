@@ -14,4 +14,11 @@ import java.sql.Date;
 @AllArgsConstructor
 public class BugDto {
     private String url;
+    private String title;
+    private Date issueDate;
+    private Integer status;
+    private Date closeDate;
+    private Date assignDate;
+    private Integer urgency;
+    private Integer severity;
 }

@@ -27,6 +27,7 @@ public class TestBugDao {
         MockitoAnnotations.openMocks(this);
         validBug=Bug.builder()
                 .bug_id(1000)
+                .title("more than 10 characters les than 100")
                 .issueDate(new Date(System.currentTimeMillis()-1))
                 .assigned_to(1)
                 .creator_id(1)
@@ -38,6 +39,7 @@ public class TestBugDao {
 
         validBug2=Bug.builder()
                 .bug_id(1200)
+                .title("more than 10 characters les than 100")
                 .issueDate(new Date(System.currentTimeMillis()-1))
                 .assigned_to(1)
                 .creator_id(1)
@@ -49,6 +51,7 @@ public class TestBugDao {
 
         validInsertBugNoId=Bug.builder()
                 .issueDate(new Date(System.currentTimeMillis()-1))
+                .title("more than 10 characters les than 100")
                 .assigned_to(1)
                 .creator_id(1)
                 .description("this is more than fifty characters for the description")
@@ -112,6 +115,7 @@ public class TestBugDao {
         try{
             Bug fromBug= Bug.builder()
                     .bug_id(input)
+                    .title("more than 10 characters les than 100")
                     .issueDate(new Date(System.currentTimeMillis()-100))
                     .creator_id(1)
                     .status(9)
