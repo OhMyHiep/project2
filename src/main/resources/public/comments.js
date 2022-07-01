@@ -1,3 +1,9 @@
+
+
+function populate_comments(commentList) {
+    let commentsDiv = document.querySelector('#comment-section-list');
+    console.log(JSON.stringify(commentList))
+
 let bugId = 3
 
 // DISPLAY COMMENTS START
@@ -103,6 +109,9 @@ async function get_comments_by_id(){
         console.log(err)
     }     
 }
+
+get_comments_by_id()
+
 // DISPLAY COMMENTS END
 
 
