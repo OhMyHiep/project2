@@ -49,9 +49,9 @@ public class BugController {
 
     public static Handler bugsByAssignee=ctx->{
         Integer assigned_To = Integer.parseInt(ctx.pathParam("assignedTo"));
-        BugResponse bug=null;
+        BugListResponse bug=null;
         if (assigned_To!=null) bug=bugService.getByAssignee(assigned_To);
-        if(bug==null) ctx.html("Not Found");
+        if(bug.getBugs().size()<0) ctx.html("Not Found");
         else ctx.json(bug);
     };
 

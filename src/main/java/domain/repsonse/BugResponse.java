@@ -17,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class BugResponse {
     private Integer bug_id;
+    private String title;
     private Date assignDate;
     private Date issueDate;
     private Date closeDate;
@@ -27,5 +28,4 @@ public class BugResponse {
     private UserDto creator;
     private UserDto assigned_to;
     private List<BugCommentDto> comment;
-    private BugDto self;
 }
