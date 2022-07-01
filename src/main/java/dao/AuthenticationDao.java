@@ -1,13 +1,22 @@
 package dao;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
 import org.jetbrains.annotations.Nullable;
+import utils.Constants;
 import utils.Cryptographer;
 import utils.JDBCUtils;
 
 import java.sql.ResultSet;
+import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Random;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
+
+import io.jsonwebtoken.SignatureAlgorithm;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.Key;
 
 public class AuthenticationDao {
 
@@ -27,26 +36,41 @@ public class AuthenticationDao {
             }
         } catch (Exception e) {}
 
-        String qry2 = "UPDATE project2.Users SET authtoken=? WHERE user_id=?;";
-
         if (results.size() == 1) {
-            Random rand = new Random();
-            String authToken = Cryptographer.MD5(Integer.valueOf(rand.nextInt()).toString()+
-                    LocalDateTime.now().toString());
+            String qry2 = "SELECT role_id FROM project2.userroles WHERE";
 
-            try {
+            Key hmacKey = new SecretKeySpec(Base64.getDecoder().decode(Constants.secretKey),
+                    SignatureAlgorithm.HS256.getJcaName());
 
-                dbUtil.executeQuery(qry2, authToken, results.get(0));
+            Instant now = Instant.now();
+            String jwtToken = Jwts.builder()
+                    .claim("username", username)
+                    .setSubject("JWT Auth")
+                    .setId(UUID.randomUUID().toString())
+                    .setIssuedAt(Date.from(now))
+                    .setExpiration(Date.from(now.plus(50, ChronoUnit.MINUTES)))
+                    .signWith(hmacKey)
+                    .compact();
 
-            } catch(Exception e) {
-                return null;
-            }
-
-            return authToken;
+            return jwtToken;
         } else {
             return null;
         }
 
+    }
+
+
+    public static Jws<Claims> parseJwt(String jwtString) {
+        String secret = "asdfSFS34wfsdfsdfSDSD32dfsddDDerQSNCK34SOWEK5354fdgdf4";
+        Key hmacKey = new SecretKeySpec(Base64.getDecoder().decode(secret),
+                SignatureAlgorithm.HS256.getJcaName());
+
+        Jws<Claims> jwt = Jwts.parserBuilder()
+                .setSigningKey(hmacKey)
+                .build()
+                .parseClaimsJws(jwtString);
+
+        return jwt;
     }
 
 }

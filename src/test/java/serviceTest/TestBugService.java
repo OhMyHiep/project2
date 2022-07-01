@@ -1,6 +1,7 @@
-package project2;
+package serviceTest;
 
 import dao.BugCommentDao;
+import dao.BugDaoImpl;
 import dao.UserDao;
 import domain.repsonse.BugListResponse;
 import domain.repsonse.BugResponse;
@@ -9,7 +10,6 @@ import entity.User;
 import entity.dto.BugDto;
 import entity.dto.UserDto;
 import org.apache.commons.lang3.StringUtils;
-import dao.BugDaoImpl;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -65,10 +65,10 @@ public class TestBugService {
                 .build();
         invalidBugNumber2= Bug.builder().bug_id(90000).build();
         validUser=User.builder().user_id(1).build();
-        validBugDto=BugService.bugDtoMapper(validBug);
+        validBugDto=BugDto.builder().url("/bug/"+validBug.getBug_id()).build();
         validBugListResponse= BugListResponse.builder()
                 .bugs(
-                        new ArrayList<>(Arrays.asList(BugService.bugDtoMapper(validBug))))
+                        new ArrayList<>(Arrays.asList(validBugDto)))
                 .build();
 
         validUserDto= UserService.userDtoMapper(validUser);
