@@ -1,5 +1,7 @@
 package dao;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import org.jetbrains.annotations.Nullable;
 import utils.Constants;
@@ -55,6 +57,20 @@ public class AuthenticationDao {
             return null;
         }
 
+    }
+
+
+    public static Jws<Claims> parseJwt(String jwtString) {
+        String secret = "asdfSFS34wfsdfsdfSDSD32dfsddDDerQSNCK34SOWEK5354fdgdf4";
+        Key hmacKey = new SecretKeySpec(Base64.getDecoder().decode(secret),
+                SignatureAlgorithm.HS256.getJcaName());
+
+        Jws<Claims> jwt = Jwts.parserBuilder()
+                .setSigningKey(hmacKey)
+                .build()
+                .parseClaimsJws(jwtString);
+
+        return jwt;
     }
 
 }
