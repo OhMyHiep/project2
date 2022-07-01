@@ -1,4 +1,4 @@
-package project2;
+package serviceTest;
 
 import dao.BugCommentDao;
 import dao.BugDaoImpl;
@@ -65,10 +65,10 @@ public class TestBugService {
                 .build();
         invalidBugNumber2= Bug.builder().bug_id(90000).build();
         validUser=User.builder().user_id(1).build();
-        validBugDto=BugService.bugDtoMapper(validBug);
+        validBugDto=BugDto.builder().url("/bug/"+validBug.getBug_id()).build();
         validBugListResponse= BugListResponse.builder()
                 .bugs(
-                        new ArrayList<>(Arrays.asList()))
+                        new ArrayList<>(Arrays.asList(validBugDto)))
                 .build();
 
         validUserDto= UserService.userDtoMapper(validUser);
