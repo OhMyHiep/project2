@@ -37,7 +37,21 @@ public class AuthenticationDao {
         } catch (Exception e) {}
 
         if (results.size() == 1) {
-            String qry2 = "SELECT role_id FROM project2.userroles WHERE";
+            String qry2 = "SELECT role_title FROM "+
+                            "((project2.users INNER JOIN project2.userroles " +
+                            "ON project2.users.user_id = project2.userroles.user_id) " +
+                            "AS stuff" +
+                            "INNER JOIN project2.roles ON project2.roles.role_id = stuff.role_id)" +
+                            "WHERE project2.users.username = ?;";
+
+            ResultSet r2 = dbUtil.executeQuery(qry2, username);
+            String roles = "";
+
+            try {
+                while (r2.next()) {
+                    roles = roles + r2.getString(0) + ",";
+                }
+            } catch (Exception e) {}
 
             Key hmacKey = new SecretKeySpec(Base64.getDecoder().decode(Constants.secretKey),
                     SignatureAlgorithm.HS256.getJcaName());
@@ -45,6 +59,7 @@ public class AuthenticationDao {
             Instant now = Instant.now();
             String jwtToken = Jwts.builder()
                     .claim("username", username)
+                    .claim("roles", roles)
                     .setSubject("JWT Auth")
                     .setId(UUID.randomUUID().toString())
                     .setIssuedAt(Date.from(now))
@@ -57,20 +72,6 @@ public class AuthenticationDao {
             return null;
         }
 
-    }
-
-
-    public static Jws<Claims> parseJwt(String jwtString) {
-        String secret = "asdfSFS34wfsdfsdfSDSD32dfsddDDerQSNCK34SOWEK5354fdgdf4";
-        Key hmacKey = new SecretKeySpec(Base64.getDecoder().decode(secret),
-                SignatureAlgorithm.HS256.getJcaName());
-
-        Jws<Claims> jwt = Jwts.parserBuilder()
-                .setSigningKey(hmacKey)
-                .build()
-                .parseClaimsJws(jwtString);
-
-        return jwt;
     }
 
 }
