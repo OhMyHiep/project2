@@ -26,6 +26,8 @@ public class AuthenticationDao {
         String qry = "SELECT * FROM project2.Users WHERE username=? AND passwd=?;";
         String hashedPass = Cryptographer.MD5(password);
 
+        String roles = "";
+
         ResultSet r = dbUtil.executeQuery(qry, username, hashedPass);
 
         ArrayList<String> results = new ArrayList<String>();
@@ -37,40 +39,28 @@ public class AuthenticationDao {
         } catch (Exception e) {}
 
         if (results.size() == 1) {
-            String qry2 = "SELECT role_id FROM project2.userroles WHERE";
+            String qry2 = "SELECT role_title FROM "+
+                            "((project2.users INNER JOIN project2.userroles " +
+                            "ON project2.users.user_id = project2.userroles.user_id) " +
+                            "AS stuff" +
+                            "INNER JOIN project2.roles ON project2.roles.role_id = stuff.role_id)" +
+                            "WHERE project2.users.username = ?;";
 
-            Key hmacKey = new SecretKeySpec(Base64.getDecoder().decode(Constants.secretKey),
-                    SignatureAlgorithm.HS256.getJcaName());
+            ResultSet r2 = dbUtil.executeQuery(qry2, username);
 
-            Instant now = Instant.now();
-            String jwtToken = Jwts.builder()
-                    .claim("username", username)
-                    .setSubject("JWT Auth")
-                    .setId(UUID.randomUUID().toString())
-                    .setIssuedAt(Date.from(now))
-                    .setExpiration(Date.from(now.plus(50, ChronoUnit.MINUTES)))
-                    .signWith(hmacKey)
-                    .compact();
 
-            return jwtToken;
+            try {
+                while (r2.next()) {
+                    roles = roles + r2.getString(0) + ",";
+                }
+            } catch (Exception e) {}
+
+
         } else {
             return null;
         }
 
-    }
-
-
-    public static Jws<Claims> parseJwt(String jwtString) {
-        String secret = "asdfSFS34wfsdfsdfSDSD32dfsddDDerQSNCK34SOWEK5354fdgdf4";
-        Key hmacKey = new SecretKeySpec(Base64.getDecoder().decode(secret),
-                SignatureAlgorithm.HS256.getJcaName());
-
-        Jws<Claims> jwt = Jwts.parserBuilder()
-                .setSigningKey(hmacKey)
-                .build()
-                .parseClaimsJws(jwtString);
-
-        return jwt;
+        return roles;
     }
 
 }

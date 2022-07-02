@@ -202,3 +202,5 @@ get_comments_by_id()
 
 let submitCommentButton = document.querySelector('#submit-comment-button')
 submitCommentButton.addEventListener("click", submit_comment)
+
+}
