@@ -24,6 +24,7 @@ public class Bug {
     private Integer urgency;
     private Integer assigned_to;
     private Integer severity;
+    private String title;
 
     @Override
     public boolean equals(Object obj){
@@ -41,6 +42,7 @@ public class Bug {
                     && (this.urgency==otherBug.urgency)
                     && (this.assigned_to==otherBug.assigned_to)
                     && (this.severity==otherBug.getSeverity())
+                    && (this.title==null?otherBug.getTitle()==null:this.title.equals(otherBug.getTitle()))
                     ;
         }
 

@@ -26,6 +26,7 @@ public class BugDaoImpl implements BasicCrud<Bug> {
            try {
                return rs.next()? Bug.builder()
                        .bug_id(rs.getInt("bug_id"))
+                       .title(rs.getString("title"))
                        .issueDate(rs.getDate("issue_date"))
                        .assignDate(rs.getDate("assign_date"))
                        .closeDate(rs.getDate("close_date"))
@@ -75,10 +76,11 @@ public class BugDaoImpl implements BasicCrud<Bug> {
 
     private Bug insertHasId(Bug bug){
         String sql= "INSERT INTO project2.bug " +
-                "(bug_id,issue_date,assigned_to,creator_id,description,status,urgency,severity) " +
-                "VALUES (?,?,?,?,?,?,?,?) RETURNING *";
+                "(bug_id,title,issue_date,assigned_to,creator_id,description,status,urgency,severity) " +
+                "VALUES (?,?,?,?,?,?,?,?,?) RETURNING *";
         ResultSet rs = jdbcUtils.executeQuery(sql,
                 bug.getBug_id(),
+                bug.getTitle(),
                 bug.getIssueDate(),
                 bug.getAssigned_to(),
                 bug.getCreator_id(),
@@ -93,9 +95,10 @@ public class BugDaoImpl implements BasicCrud<Bug> {
 
     private Bug insertNoId(Bug bug){
         String sql= "INSERT INTO project2.bug " +
-                "(issue_date,assigned_to,creator_id,description,status,urgency,severity) " +
-                "VALUES (?,?,?,?,?,?,?) RETURNING *";
+                "(title,issue_date,assigned_to,creator_id,description,status,urgency,severity) " +
+                "VALUES (?,?,?,?,?,?,?,?) RETURNING *";
         ResultSet rs = jdbcUtils.executeQuery(sql,
+                bug.getTitle(),
                 bug.getIssueDate(),
                 bug.getAssigned_to(),
                 bug.getCreator_id(),
@@ -112,11 +115,12 @@ public class BugDaoImpl implements BasicCrud<Bug> {
     @Override
     public Integer update(Bug bug) {
         String sql= "UPDATE project2.bug " +
-                "SET assign_date=?,close_date=?, assigned_to=?,description=?,status=?,urgency=?,severity=? " +
+                "SET title=?,assign_date=?,close_date=?, assigned_to=?,description=?,status=?,urgency=?,severity=? " +
                 "WHERE bug_id=? " +
                 "RETURNING *";
 
         return rowMapper(jdbcUtils.executeQuery(sql,
+                bug.getTitle(),
                 bug.getAssignDate(),
                 bug.getCloseDate(),
                 bug.getAssigned_to(),
@@ -157,7 +161,7 @@ public class BugDaoImpl implements BasicCrud<Bug> {
     }
 
 
-    public Bug getBugByAssignee(Integer assignedTo) {
+    public List<Bug> getBugByAssignee(Integer assignedTo) {
         String sql = "SELECT *" +
                 "FROM project2.bug;"+
                 "where assigned_to=?";

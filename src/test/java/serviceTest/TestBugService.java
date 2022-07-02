@@ -43,16 +43,17 @@ public class TestBugService {
     private User validUser;
     private User invalidUser=null;
     private BugResponse validBugResponse;
-    private BugDto validBugDto;
+    private BugDto validBugDto,bareBugDto;
     private UserDto validUserDto;
 
-    BugListResponse validBugListResponse;
+    BugListResponse validBugListResponse,bareBugListResponse;
 
     @BeforeClass
     public void setUp(){
         MockitoAnnotations.openMocks(this);
         validBug=Bug.builder()
                 .bug_id(1)
+                .title("more than 10 characters les than 100")
                 .description("this is more than fifty characters for the description")
                 .urgency(1)
                 .severity(1)
@@ -65,16 +66,37 @@ public class TestBugService {
                 .build();
         invalidBugNumber2= Bug.builder().bug_id(90000).build();
         validUser=User.builder().user_id(1).build();
-        validBugDto=BugDto.builder().url("/bug/"+validBug.getBug_id()).build();
+        validBugDto=BugDto.builder()
+                .url("/bug/"+validBug.getBug_id())
+                .status(validBug.getStatus())
+                .issueDate(validBug.getIssueDate())
+                .severity(validBug.getSeverity())
+                .closeDate(validBug.getCloseDate())
+                .assignDate(validBug.getAssignDate())
+                .title(validBug.getTitle())
+                .urgency(validBug.getUrgency())
+                .build();
+
         validBugListResponse= BugListResponse.builder()
                 .bugs(
                         new ArrayList<>(Arrays.asList(validBugDto)))
                 .build();
 
+        bareBugDto=BugDto.builder()
+                .url("/bug/"+validBug.getBug_id())
+                .build();
+
+        bareBugListResponse=BugListResponse.builder()
+                .bugs(
+                        new ArrayList<>(Arrays.asList(bareBugDto)))
+                .build();
+
+
         validUserDto= UserService.userDtoMapper(validUser);
 
         validBugResponse=BugResponse.builder()
                 .bug_id(validBug.getBug_id())
+                .title(validBug.getTitle())
                 .assignDate(validBug.getAssignDate())
                 .closeDate(validBug.getCloseDate())
                 .description(validBug.getDescription())
@@ -85,7 +107,6 @@ public class TestBugService {
                 .comment(new ArrayList<>())
                 .creator(validUserDto)
                 .assigned_to(validUserDto)
-                .self(validBugDto)
                 .build();
 
         when(mockBugDao.getById(1)).thenReturn(validBug);
@@ -233,7 +254,7 @@ public class TestBugService {
     @DataProvider
     public Object[][] idProviderTemplate(){
         return new Object[][]{
-                {null,null} ,{1,validBugListResponse},{90000,null}
+                {null,null} ,{1,bareBugListResponse},{90000,null}
         };
     }
     @Test(dataProvider = "idProviderTemplate")
@@ -244,7 +265,7 @@ public class TestBugService {
     @Test
     public void test_update_sucess(){
         Bug tempBug= Bug.builder().bug_id(1).build();
-        Assert.assertEquals(mockBugService.update(tempBug),validBugListResponse);
+        Assert.assertEquals(mockBugService.update(tempBug),bareBugListResponse);
     }
     @Test
     public void test_update_incorrectID(){
@@ -255,7 +276,7 @@ public class TestBugService {
     @DataProvider
     public Object[][] bugListResponseProvider(){
         return new Object[][]{
-                {null,null},{validBug,validBugListResponse},{invalidBugNumber2,null}
+                {null,null},{validBug,bareBugListResponse},{invalidBugNumber2,null}
         };
     }
     @Test(dataProvider = "bugListResponseProvider")

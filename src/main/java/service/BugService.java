@@ -28,6 +28,7 @@ public class BugService {
     public static BugResponse bugResponseMapper(Bug bug,BugDto bugDto, List<BugCommentDto> bugCommentDto, UserDto creator,UserDto assigned_to){
         return BugResponse.builder()
                 .bug_id(bug.getBug_id())
+                .title(bug.getTitle())
                 .assignDate(bug.getAssignDate())
                 .closeDate(bug.getCloseDate())
                 .description(bug.getDescription())
@@ -38,13 +39,19 @@ public class BugService {
                 .comment(bugCommentDto)
                 .creator(creator)
                 .assigned_to(assigned_to)
-                .self(bugDto)
                 .build();
     }
 
     public static BugDto bugDtoMapper(Bug bug){
         return BugDto.builder()
                 .url("/bug/"+bug.getBug_id())
+                .status(bug.getStatus())
+                .issueDate(bug.getIssueDate())
+                .severity(bug.getSeverity())
+                .closeDate(bug.getCloseDate())
+                .assignDate(bug.getAssignDate())
+                .title(bug.getTitle())
+                .urgency(bug.getUrgency())
                 .build();
     }
 
@@ -81,8 +88,9 @@ public class BugService {
         if(bug==null
                 ||!descriptionIsValidForInsert(bug.getDescription())
                 ||!severityIsValidForInsert(bug.getSeverity())
-                ||!urgencyIsValidForInsert(bug.getUrgency()) ||
-                !creator_idIsValidForInsert(bug.getCreator_id())
+                ||!urgencyIsValidForInsert(bug.getUrgency())
+                ||!creator_idIsValidForInsert(bug.getCreator_id())
+                ||!titleIsValidForInsert(bug.getTitle())
         ) return null;
 
         bug.setStatus(1);
@@ -105,6 +113,7 @@ public class BugService {
                 || !severityIsValidForUpdate(bug.getSeverity())
                 || !urgencyIsValidForUpdate(bug.getUrgency())
                 || !descriptionIsValidForUpdate(bug.getDescription())
+                || !titleIsValidForUpdate(bug.getTitle())
         )return null;
         Bug queryBug=bugDao.getById(bug.getBug_id());
         if (queryBug==null) return null;
@@ -167,22 +176,29 @@ public class BugService {
 
 
 
-    public BugResponse getByAssignee(Integer assignedTo) {
+    public BugListResponse getByAssignee(Integer assignedTo) {
         if (assignedTo==null) return null;
-        Bug bug =bugDao.getBugByAssignee(assignedTo);
-        if (bug==null) return null;
-        BugDto bugDto= bugDtoMapper(bug);
-        List<BugCommentDto> commentDtos= bugCommentDao.getAllByBugId(bug.getBug_id()).stream()
-                .map(bugComment ->BugCommentService.BugCommentDtoMapper(bugComment))
-                .collect(Collectors.toList());
-        UserDto creator= UserService.userDtoMapper(userDao.getById(bug.getCreator_id()));
-//        UserDto assigned_to= UserService.userDtoMapper(userDao.getById(bug.getAssigned_to()));
-        User assignee= userDao.getById(bug.getAssigned_to());
-        UserDto assigned_to= assignee==null?null: UserService.userDtoMapper(assignee);
-        return bugResponseMapper(bug,bugDto,commentDtos,creator,assigned_to);
+        List<Bug> bugs =bugDao.getBugByAssignee(assignedTo);
+        if (bugs.size()==0) return null;
+        return BugListResponse.builder()
+                .bugs(
+                        bugs.stream()
+                    .map(x->bugDtoMapper(x))
+                    .collect(Collectors.toList()))
+                .build();
+
 
     }
 
+    private boolean titleIsValidForInsert(String title){
+        if(title!=null && title.trim().length()>10 && title.trim().length()<=100) return true;
+        else return false;
+    }
+    private boolean titleIsValidForUpdate(String title){
+        if (title==null) return true;
+        else if(title.trim().length()>10 && title.trim().length()<=100) return true;
+        else return false;
+    }
 
     public boolean descriptionIsValidForInsert(String description){
         if(description!=null && description.trim().length()>=50 && description.trim().length()<=1000) return true;
