@@ -26,6 +26,8 @@ public class AuthenticationDao {
         String qry = "SELECT * FROM project2.Users WHERE username=? AND passwd=?;";
         String hashedPass = Cryptographer.MD5(password);
 
+        String roles = "";
+
         ResultSet r = dbUtil.executeQuery(qry, username, hashedPass);
 
         ArrayList<String> results = new ArrayList<String>();
@@ -45,7 +47,7 @@ public class AuthenticationDao {
                             "WHERE project2.users.username = ?;";
 
             ResultSet r2 = dbUtil.executeQuery(qry2, username);
-            String roles = "";
+
 
             try {
                 while (r2.next()) {
@@ -53,25 +55,12 @@ public class AuthenticationDao {
                 }
             } catch (Exception e) {}
 
-            Key hmacKey = new SecretKeySpec(Base64.getDecoder().decode(Constants.secretKey),
-                    SignatureAlgorithm.HS256.getJcaName());
 
-            Instant now = Instant.now();
-            String jwtToken = Jwts.builder()
-                    .claim("username", username)
-                    .claim("roles", roles)
-                    .setSubject("JWT Auth")
-                    .setId(UUID.randomUUID().toString())
-                    .setIssuedAt(Date.from(now))
-                    .setExpiration(Date.from(now.plus(50, ChronoUnit.MINUTES)))
-                    .signWith(hmacKey)
-                    .compact();
-
-            return jwtToken;
         } else {
             return null;
         }
 
+        return roles;
     }
 
 }
