@@ -2,31 +2,43 @@
 {% block title %} Bug {% endblock %}
 {% block content %}
 <h1>Bug</h1>
-<div class="col-12" id="bug-section">
-    <div class="col-8 align-item-center">
-        <div class="col-1 align-item-left align-item-top">
-            this is the name of creator
+
+<button onclick="onLoadDisplay()">Test</button>
+<div class="container mt-5">
+    <div class="d-flex justify-content-start row" id="bug-section">
+        <div class="col-md-6">
+            <div class="bg-white">
+                <div class="d-flex flex-row user p-2"><img class="rounded-circle" src="https://i.imgur.com/EQk6lCz.jpg" width="60">
+                    <div class="d-flex flex-column ml-2"><span class="name font-weight-bold" id="title"></span><small id="creator-name"></small><small id="issue-date"></small> </div>
+                </div>
+                <div class="mt-2 p-2 mb-0">
+                    <p class="mb-0 pb-0" id="description"></p>
+                </div>
+                <span class="mx-auto p-3 font-weight-light" id="warning-panel">
+                        <small ><span class="badge bg-secondary " id="severity"></span></small>
+                        <small ><span class="badge bg-secondary " id="urgency"></span></small>
+                        <small ><span class="badge bg-secondary " id="status"></span></small>
+                        <small ><span class="badge bg-secondary " id="assigned-to"></span></small>
+                        <small ><span class="badge bg-secondary " id="close-date"></span></small>
+                    </span>
+            </div>
         </div>
-        <p>
-            this is the description of the text
-            it can be very very long
-            and it will look like a post
-        </p>
+    </div>
+    <div class="container row g-3" id="comment-section-input">
+        <div class="col-12" id="comment-error-div">
+        </div>
+        <div class="form-floating">
+            <textarea class="form-control" placeholder="Leave a comment here" id="comment-textarea" style="height: 100px; width: 40%; min-height: 100px;"></textarea>
+            <label class="ms-2" for="comment-textarea">Comment here</label>
+        </div>
+        <div class="col">
+            <button type="button" class="btn btn-primary" id="submit-comment-button">Submit</button>
+        </div>
+    </div>
+    <div class="row g-3" id="comment-section-list">
+        <h3 class="pt-2">Comments</h3>
     </div>
 </div>
-<div class="row g-3" id="comment-section-input">
-    <div class="col-12" id="comment-error-div">
-    </div>
-    <div class="form-floating">
-        <textarea class="form-control" placeholder="Leave a comment here" id="comment-textarea" style="height: 100px; width: 40%; min-height: 100px;"></textarea>
-        <label class="ms-2" for="comment-textarea">Comment here</label>
-    </div>
-    <div class="col">
-        <button type="button" class="btn btn-primary" id="submit-comment-button">Submit</button>
-    </div>
-</div>
-<div class="row g-3" id="comment-section-list">
-    <h3 class="pt-2">Comments</h3>
-</div>
-<script src="comments.js"></script>
+<script src="bug.js" defer></script>
+<script src="comments.js" defer></script>
 {% endblock %}
