@@ -147,6 +147,9 @@ async function submit_comment() {
         disable_comment_button()
         let textForComment = document.querySelector('#comment-textarea')
         check_for_error_message()
+
+//        let jwtJson = localStorage.getItem('login')
+//        let parsedJson = JSON.parse(jwtJson)
         // let bugIdUrl = window.location.pathname;
         // let start = bugId.indexOf('/');
         // let end = bugId.lastIndexOf('/');
@@ -155,6 +158,7 @@ async function submit_comment() {
         const res = await fetch(`bug/${bugId}/comments`, {
             headers: {
                 'Content-Type': 'application/json'
+//                'Authorization': parsedJson.token
             },
             method: 'POST',
             body: JSON.stringify({
