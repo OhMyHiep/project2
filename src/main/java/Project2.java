@@ -19,20 +19,20 @@ public class Project2 {
 
         app.get("/", ctx->{
             ctx.render("bug.html");
-        });
-        app.get("bug/{bug_id}/comments", BugCommentController.viewAllCommentsRequest);
-        app.post("bug/{bug_id}/comments", BugCommentController.createCommentRequest);
-        app.get("/comments/comment/{commentId}", BugCommentController.getCommentByIdRequest);
+        }, Role.RoleTitle.Programmer);
+        app.get("bug/{bug_id}/comments", BugCommentController.viewAllCommentsRequest,Role.RoleTitle.Programmer);
+        app.post("bug/{bug_id}/comments", BugCommentController.createCommentRequest,Role.RoleTitle.Programmer);
+        app.get("/comments/comment/{commentId}", BugCommentController.getCommentByIdRequest,Role.RoleTitle.Programmer);
 
         app.get("/view", ctx->{
             ctx.render("bugView.html");
         });
 
-        app.delete("/bug/{bug_id}",BugController.deleteBugById);
-        app.get("/bug/{bug_id}", BugController.getBugById);
-        app.get("/bug",BugController.bugList);
-        app.post("/bug",BugController.addBug);
-        app.patch("/bug",BugController.updateBug);
+        app.delete("/bug/{bug_id}",BugController.deleteBugById,Role.RoleTitle.Programmer);
+        app.get("/bug/{bug_id}", BugController.getBugById, Role.RoleTitle.Programmer);
+        app.get("/bug",BugController.bugList,Role.RoleTitle.Programmer);
+        app.post("/bug",BugController.addBug,Role.RoleTitle.Programmer);
+        app.patch("/bug",BugController.updateBug,Role.RoleTitle.Programmer);
 
         app.get("/comments/{bug_id}",BugCommentController.viewAllCommentsRequest);
         app.post("/comments",BugCommentController.createCommentRequest);

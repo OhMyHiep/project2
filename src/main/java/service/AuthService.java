@@ -1,5 +1,6 @@
 package service;
 
+import dao.AuthenticationDao;
 import dao.RoleDao;
 import dao.UserDao;
 import entity.Role;
@@ -46,7 +47,7 @@ public class AuthService {
 
         for (String r : roleSplit) {
             for (Role r2 : possibleRoles) {
-                if (r.equals(r2.getRole_title())) {
+                if (r.toLowerCase().equals(r2.getRole_title().toString().toLowerCase())) {
                     chosenRoles.add(r2);
                 }
             }
@@ -89,5 +90,40 @@ public class AuthService {
 
         return jwtToken;
 
+    }
+
+    public AuthResponse buildJwt(AuthRequest login) {
+        String username = login.getUsername();
+        String pw = login.getPassword();
+
+        String roleString = AuthenticationDao.authenticate(username,pw);
+        String[] splitted = roleString.split(",");
+
+        ArrayList<Role> roles = new ArrayList<>();
+        RoleDao rd = new RoleDao();
+
+        for (String s: splitted) {
+            roles.add(rd.getByTitle(s));
+        }
+
+        List<RoleDto> RoleDtolist = roles.stream()
+                .map(role->RoleService.roleDtoMapper(role))
+                .collect(Collectors.toList());
+
+        UserDao ud = new UserDao();
+        User u = ud.getByCredentials(username,pw);
+
+        String token = buildJwt(new Tuple<ArrayList<Role>,User>(roles,u));
+        UserResponse ur=userService.getUserResponse(u);
+        ur.setRoles(RoleDtolist);
+        AuthResponse ar = new AuthResponse();
+        ar.setUser(ur);
+        ar.setToken(token);
+        return ar;
+    }
+
+
+    public Tuple<ArrayList<Role>,User> ddJwt(String token) {
+        return decodeJwt(decryptJwt(token));
     }
 }

@@ -5,12 +5,30 @@ import io.javalin.core.security.RouteRole;
 import lombok.*;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class Role implements RouteRole {
+public class Role {
 
-    private int role_id;
-    private String role_title;
+    private Integer role_id;
+    private RouteRole role_title;
+
+    public enum RoleTitle implements RouteRole {
+        Programmer,
+        TechLead,
+        ProgrammerAndTechLead,
+        Everyone;
+    };
+
+    public Role(int id, String roletitle) {
+        if (roletitle.toLowerCase().equals("programmer")) {
+            role_title = RoleTitle.Programmer;
+        } else if (roletitle.toLowerCase().equals("techlead")) {
+            role_title = RoleTitle.TechLead;
+        } else if (roletitle.toLowerCase().equals("everyone")) {
+            role_title = RoleTitle.Everyone;
+        } else if (roletitle.toLowerCase().equals("programmerandtechlead")) {
+            role_title = RoleTitle.ProgrammerAndTechLead;
+        }
+
+        role_id = id;
+    }
 
 }
