@@ -25,6 +25,11 @@ function removeAlert() {
     }
 }
 
+function saveAndRedirect(json) {
+    localStorage.setItem('login', JSON.stringify(json))
+    window.location.replace("http://localhost:8080/view")
+}
+
 async function login() {
     let usernameText = document.querySelector("#username").value;
     let passwordText = document.querySelector("#password").value;
@@ -45,9 +50,11 @@ async function login() {
         createAlert("Invalid login!")
     }
     else {
+        removeAlert()
         const loginJson = await response.json()
-        console.log(JSON.stringify(loginJson));
+        console.log(JSON.stringify(loginJson))
+        saveAndRedirect(loginJson)
     }
 }
 
-let button = document.addEventListener("click", login)
+document.querySelector("#submit").addEventListener("click", login)
