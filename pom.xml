@@ -99,6 +99,11 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>4.2.1</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -107,10 +112,10 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M6</version>
                 <configuration>
-                    <skipTests>true</skipTests>
+<!--                    <skipTests>true</skipTests>-->
                     <suiteXmlFiles>
-                        <suiteXmlFile>src/test/resources/test_suite_comments.xml</suiteXmlFile>
-                        <suiteXmlFile>src/test/resources/test_suite_bugs.xml</suiteXmlFile>
+<!--                        <suiteXmlFile>src/test/resources/test_suite_comments.xml</suiteXmlFile>-->
+<!--                        <suiteXmlFile>src/test/resources/test_suite_bugs.xml</suiteXmlFile>-->
                         <suiteXmlFile>src/test/resources/selenium_test_suite.xml</suiteXmlFile>
                     </suiteXmlFiles>
                 </configuration>
