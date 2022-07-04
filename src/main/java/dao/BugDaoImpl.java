@@ -2,7 +2,6 @@ package dao;
 
 import dao.interfaces.BasicCrud;
 import entity.Bug;
-import entity.BugComment;
 import org.jetbrains.annotations.NotNull;
 import utils.JDBCUtils;
 
@@ -50,8 +49,7 @@ public class BugDaoImpl implements BasicCrud<Bug> {
     @Override
     public List<Bug> getAll() {
         String sql = "SELECT *" +
-                "FROM bug;";
-
+                "FROM project2.bug;";
         ResultSet rs = jdbcUtils.executeQuery(sql);
         Bug bug= rowMapper(rs);
         ArrayList<Bug> bugs= new ArrayList<>();
@@ -134,8 +132,8 @@ public class BugDaoImpl implements BasicCrud<Bug> {
     }
 
     @NotNull
-    private List<Bug> getBugs(Integer creator_id, String sql) {
-        ResultSet rs = jdbcUtils.executeQuery(sql,creator_id);
+    private List<Bug> getBugs(Integer user_id, String sql) {
+        ResultSet rs = jdbcUtils.executeQuery(sql,user_id);
         Bug bug= rowMapper(rs);
         ArrayList<Bug> bugs= new ArrayList<>();
         while (bug!=null) {
@@ -146,12 +144,11 @@ public class BugDaoImpl implements BasicCrud<Bug> {
     }
 
 
-    public Bug getBugByAssignee(Integer assignedTo) {
+    public List<Bug> getBugByAssignee(Integer assignedTo) {
         String sql = "SELECT *" +
                 "FROM project2.bug "+
                 "WHERE assigned_to= ?";
 
-        ResultSet rs= jdbcUtils.executeQuery(sql,assignedTo);
-        return rowMapper(rs);
+        return getBugs(assignedTo,sql);
     }
 }

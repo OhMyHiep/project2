@@ -1,6 +1,7 @@
 package project2;
 
 import dao.BugCommentDao;
+import dao.BugDaoImpl;
 import dao.UserDao;
 import domain.repsonse.BugListResponse;
 import domain.repsonse.BugResponse;
@@ -9,7 +10,6 @@ import entity.User;
 import entity.dto.BugDto;
 import entity.dto.UserDto;
 import org.apache.commons.lang3.StringUtils;
-import dao.BugDaoImpl;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -68,7 +68,7 @@ public class TestBugService {
         validBugDto=BugService.bugDtoMapper(validBug);
         validBugListResponse= BugListResponse.builder()
                 .bugs(
-                        new ArrayList<>(Arrays.asList(BugService.bugDtoMapper(validBug))))
+                        new ArrayList<>(Arrays.asList()))
                 .build();
 
         validUserDto= UserService.userDtoMapper(validUser);

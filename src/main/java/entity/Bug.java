@@ -25,18 +25,27 @@ public class Bug {
     private Integer assigned_to;
     private Integer severity;
 
-//    @Override
-//    public boolean equals(Object obj){
-//        if(obj instanceof Bug){
-//            Bug otherBug= (Bug)obj;
-//            return this.bug_id==otherBug.getBug_id()
-//                    && this.assignDate==null? otherBug.getAssignDate()==null:this.assignDate.equals(otherBug.getAssignDate())
-//                    && this.issueDate==null? otherBug.issueDate
-//        }
-//    }
-//
-//    @Override
-//    public int hashCode(){
-//        return bug_id;
-//    }
+    @Override
+    public boolean equals(Object obj){
+        if(obj!=null && obj instanceof Bug){
+            Bug otherBug= (Bug)obj;
+            return this.bug_id==otherBug.getBug_id()
+                    && (this.getAssignDate()==null ? otherBug.getAssignDate()==null:this.getAssignDate()==otherBug.getAssignDate())
+//                    && (this.issueDate==null ? otherBug.getIssueDate()==null:this.issueDate.equals(otherBug.getIssueDate()))
+//                    && (this.closeDate==null ? otherBug.getCloseDate()==null:this.closeDate.equals(otherBug.getCloseDate()))
+//                    && (this.creator_id==otherBug.getCreator_id())
+//                    && (this.description==null?otherBug.description==null:this.description.equals(otherBug.getDescription()))
+//                    && this.status==otherBug.status
+//                    && this.urgency==otherBug.urgency
+//                    && this.assigned_to==otherBug.assigned_to
+//                    && this.severity==otherBug.getSeverity()
+                    ;
+        }
+        else return false;
+    }
+
+    @Override
+    public int hashCode(){
+        return bug_id;
+    }
 }

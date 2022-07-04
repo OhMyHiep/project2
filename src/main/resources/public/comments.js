@@ -25,5 +25,4 @@ async function get_comments_by_id(){
         console.log(err)
     }     
 }
-
 get_comments_by_id()

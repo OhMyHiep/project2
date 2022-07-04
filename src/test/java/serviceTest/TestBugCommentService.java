@@ -9,6 +9,7 @@ import entity.Bug;
 import entity.BugComment;
 import entity.User;
 import entity.dto.BugCommentDto;
+import entity.dto.UserDto;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -17,6 +18,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import service.BugCommentService;
+import service.UserService;
 
 import java.util.Arrays;
 import java.util.List;
@@ -55,13 +57,15 @@ public class TestBugCommentService {
         comment = BugComment.builder().commentId(1).bugId(1).commenterUserId(1).commentText("Maybe try and reload the pom file").commentDate(null).build();
 
         BugCommentDto bugCommentDto = bugCommentService.BugCommentDtoMapper(comment);
-        commentResponse = BugCommentResponse.builder().commentId(comment.getCommentId()).bugId(comment.getBugId()).commenterId(comment.getCommenterUserId()).commentText(comment.getCommentText()).commentDate(comment.getCommentDate()).commentUrl(bugCommentDto).build();
+        UserDto userDto = UserService.userDtoMapper(user1);
+        commentResponse = BugCommentResponse.builder().commentId(comment.getCommentId()).bugId(comment.getBugId()).commenterId(comment.getCommenterUserId()).userUrl(userDto).commentText(comment.getCommentText()).commentDate(comment.getCommentDate()).commentUrl(bugCommentDto).build();
     }
 
     @Test
     public void testGetBugIdComments_Success() {
         when(mockBugCommentDao.getAllByBugId(1)).thenReturn(Arrays.asList(comment));
         when(mockBugDao.getById(1)).thenReturn(bug);
+        when(mockUserDao.getById(1)).thenReturn(user1);
 
         List<BugCommentResponse> commentList = bugCommentService.getCommentsForBug(1);
         comment.setCommentDate(commentList.get(0).getCommentDate());
@@ -71,6 +75,7 @@ public class TestBugCommentService {
     public void testGetBugIdComments_Failure_notExisting1() {
         when(mockBugCommentDao.getAllByBugId(-1)).thenReturn(null);
         when(mockBugDao.getById(-1)).thenReturn(null);
+        when(mockUserDao.getById(-1)).thenReturn(null);
 
         List<BugCommentResponse> commentList = bugCommentService.getCommentsForBug(-1);
         Assert.assertEquals(commentList, null);
@@ -80,6 +85,7 @@ public class TestBugCommentService {
     public void testGetBugIdComments_Failure_notExisting2() {
         when(mockBugCommentDao.getAllByBugId(4000)).thenReturn(null);
         when(mockBugDao.getById(4000)).thenReturn(null);
+        when(mockUserDao.getById(4000)).thenReturn(null);
 
         List<BugCommentResponse> commentList = bugCommentService.getCommentsForBug(4000);
         Assert.assertEquals(commentList, null);
@@ -115,6 +121,6 @@ public class TestBugCommentService {
     public void givenComment_WhenCheckValid_ThenAcceptOrDeny(BugComment bugComment, boolean result, User outputUser, Bug outputBug){
         when(mockBugDao.getById(bugComment.getBugId())).thenReturn(outputBug);
         when(mockUserDao.getById(bugComment.getCommenterUserId())).thenReturn(outputUser);
-        Assert.assertEquals(bugCommentService.validateValidInputForComments(bugComment), result);
+        Assert.assertEquals(bugCommentService.validateValidInputForComments(bugComment, outputUser), result);
     }
 }

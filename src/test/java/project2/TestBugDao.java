@@ -42,7 +42,8 @@ public class TestBugDao {
     }
     @Test(dataProvider = "bugIdProvider")
     public void test_getById(Integer input,Bug expected){
-        Assert.assertTrue(bugDao.getById(input)expected.getBug_id());
+        Bug result=bugDao.getById(input);
+        Assert.assertTrue(result==null? expected==null: result.equals(expected));
     }
 
     @AfterClass
