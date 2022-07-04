@@ -1,5 +1,6 @@
 package controller;
 
+import domain.repsonse.AuthResponse;
 import domain.request.AuthRequest;
 import entity.Role;
 import entity.User;
@@ -17,7 +18,6 @@ public class AuthController {
         Tuple<ArrayList<Role>, User> roleContainer=authService.ddJwt(jwtString);
         return roleContainer.x;
     }
-
     public static Handler login = ctx -> {
         AuthRequest login= ctx.bodyAsClass(AuthRequest.class);
         if (login != null) {
@@ -28,6 +28,5 @@ public class AuthController {
             ctx.status(400);
         }
     };
-
 
 }

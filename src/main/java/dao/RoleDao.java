@@ -29,17 +29,18 @@ public class RoleDao implements BasicCrud<Role> {
     public Role getByTitle(String title) {
         JDBCUtils db = new JDBCUtils();
         String qry = "SELECT * FROM project2.roles WHERE role_title=?;";
-
         ResultSet r = db.executeQuery(qry, title);
-
         try {
-            r.next();
-            return new Role(r.getInt("role_id"),r.getString("role_title"));
+            while (r.next()) {
+                return new Role(r.getInt("role_id"), r.getString("role_title"));
+            }
         } catch (Exception e) {
-            return null;
+            System.out.println(e);
         } finally {
             db.close();
         }
+        System.out.println("it is return null role");
+        return null;
     }
 
     @Override
