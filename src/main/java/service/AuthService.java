@@ -3,23 +3,28 @@ package service;
 import dao.AuthenticationDao;
 import dao.RoleDao;
 import dao.UserDao;
+import domain.repsonse.AuthResponse;
+import domain.repsonse.BugListResponse;
+import domain.repsonse.UserResponse;
+import domain.request.AuthRequest;
 import entity.Role;
 import entity.User;
+import entity.dto.RoleDto;
 import io.jsonwebtoken.*;
 import utils.Constants;
 import utils.Tuple;
 
 import javax.crypto.spec.SecretKeySpec;
-import java.lang.reflect.Array;
 import java.security.Key;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class AuthService {
+
+    private UserDao ud = new UserDao();
+    private UserService userService = new UserService();
 
     public Jws<Claims> decryptJwt(String jwtString) {
         String secret = Constants.secretKey;
@@ -53,11 +58,8 @@ public class AuthService {
             }
         }
 
-        UserDao ud = new UserDao();
+
         User theUser = ud.getById(Integer.valueOf(user_id));
-
-
-
         return new Tuple<ArrayList<Role>,User>(chosenRoles,theUser);
     }
 
@@ -76,7 +78,6 @@ public class AuthService {
             roleString = roleString + role.getRole_title() + ",";
         }
 
-
         Instant now = Instant.now();
         String jwtToken = Jwts.builder()
                 .claim("user_id", user_id)
@@ -87,7 +88,6 @@ public class AuthService {
                 .setExpiration(Date.from(now.plus(50, ChronoUnit.MINUTES)))
                 .signWith(hmacKey)
                 .compact();
-
         return jwtToken;
 
     }

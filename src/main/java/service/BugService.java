@@ -189,6 +189,19 @@ public class BugService {
 
     }
 
+
+    public BugListResponse getBugByCreatorId(Integer creator_id) {
+        if (creator_id==null) return null;
+        List<Bug> bugs =bugDao.getBugByCreatorId(creator_id);
+        if (bugs.size()==0) return null;
+        return BugListResponse.builder()
+                .bugs(
+                        bugs.stream()
+                                .map(x->bugDtoMapper(x))
+                                .collect(Collectors.toList()))
+                .build();
+    }
+
     private boolean titleIsValidForInsert(String title){
         if(title!=null && title.trim().length()>10 && title.trim().length()<=100) return true;
         else return false;

@@ -139,18 +139,18 @@ public class BugDaoImpl implements BasicCrud<Bug> {
     public void closeConnection(){
         jdbcUtils.close();
     }
-    public Bug getBugByCreatorId(Integer creator_id) {
+    public List<Bug> getBugByCreatorId(Integer creator_id) {
         String sql = "SELECT *" +
                 "FROM project2.bug"+
                 "where creator_id=?";
 
         ResultSet rs= jdbcUtils.executeQuery(sql,creator_id);
-        return rowMapper(rs);
+        return getBugs(creator_id,sql);
     }
 
     @NotNull
-    private List<Bug> getBugs(Integer creator_id, String sql) {
-        ResultSet rs = jdbcUtils.executeQuery(sql,creator_id);
+    private List<Bug> getBugs(Integer user_id, String sql) {
+        ResultSet rs = jdbcUtils.executeQuery(sql,user_id);
         Bug bug= rowMapper(rs);
         ArrayList<Bug> bugs= new ArrayList<>();
         while (bug!=null) {
