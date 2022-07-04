@@ -16,7 +16,6 @@
 </div>
 <div class="row g-3" id="comment-section-input">
     <div class="col-12" id="comment-error-div">
-
 <button onclick="onLoadDisplay()">Test</button>
 <div class="container mt-5">
     <div class="d-flex justify-content-start row" id="bug-section">
@@ -37,6 +36,48 @@
                     </span>
             </div>
         </div>
+        <div class="col-md-6 col-lg-6">
+            <span id="feedback"></span>
+            <h3 align = "center" >Review Bugs</h3>
+            <div class="d-flex flex-row">
+                <select id="update-severity" class="form-select" aria-label="Default select example">
+                    <option disabled selected>Severity</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                </select>
+                <select id="update-urgency" class="form-select" aria-label="Default select example">
+                    <option disabled selected>Urgency</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                </select>
+                <select id="assign-to" class="form-select" aria-label="Default select example">
+                    <option disabled selected>Assign to...</option>
+                </select>
+                <select id="update-status" class="form-select" aria-label="Default select example">
+                    <option disabled selected>Status</option>
+                    <option value="2">Accept</option>
+                    <option value="3">Reject</option>
+                    <option value="4">Close</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" id="update" value="Update" name="update">
+            </div>
+        </div>
     </div>
     <div class="container row g-3" id="comment-section-input">
         <div class="col-12" id="comment-error-div">
@@ -53,6 +94,8 @@
         <h3 class="pt-2">Comments</h3>
     </div>
 </div>
+
 <script src="bug.js" defer></script>
 <script src="comments.js" defer></script>
+<script type="module" src="managerReviewBug.js"></script>
 {% endblock %}

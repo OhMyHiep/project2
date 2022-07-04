@@ -33,14 +33,15 @@ public class BugController {
 
     public static Handler addBug=ctx ->{
         Bug bug = ctx.bodyAsClass(Bug.class);
-        if(bug.getIssueDate()==null || bug.getDescription()==null)
+        if(bug.getDescription()==null)
             ctx.html("Invalid Input");
         else ctx.json(bugService.insert(bug));
     };
 
     public static Handler updateBug=ctx->{
         Bug bug = ctx.bodyAsClass(Bug.class);
-        BugListResponse updated=null;
+        System.out.println(bug);
+        BugListResponse updated;
         updated=bugService.update(bug);
         if(updated!=null) ctx.json(updated);
         else ctx.html("not found");

@@ -30,6 +30,3 @@ async function getAllComments(bug_id){
         console.log(e)
         }
 }
-
-async function addComment(){
-}

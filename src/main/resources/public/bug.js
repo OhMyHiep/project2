@@ -41,9 +41,8 @@ function displayBug(bug){
 
     let issueDateConverted=new Date(bug["issueDate"])
     issueDate.innerText=issueDateConverted.getMonth()+"/"+issueDateConverted.getDate()+"/"+issueDateConverted.getFullYear();
-
     if (bug["assigned_to"]!=null){
-        assignedTo.innerText="Assigned To: "+bug["assinged_to"]["firstname"]+" "+bug["assinged_to"]["lastname"];
+        assignedTo.innerText="Assigned To: "+bug["assigned_to"]["firstname"]+" "+bug["assigned_to"]["lastname"];
     }
 }
 
@@ -52,3 +51,4 @@ async function onLoadDisplay(){
     displayBug(bug);
 
 }
+
