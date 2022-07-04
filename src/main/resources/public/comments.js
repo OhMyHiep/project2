@@ -1,4 +1,4 @@
-let bugId = 3
+let bugIdComment = 5
 
 // DISPLAY COMMENTS START
 function convertDate(date) {
@@ -13,7 +13,7 @@ function convertDate(date) {
 function create_comment_block(item) {
     // Element creation
     let colElement = document.createElement("div")
-    colElement.setAttribute("class", "col-12 m-1")
+    colElement.setAttribute("class", "comments col-12 m-1")
 
     let cardElement = document.createElement("div")
     cardElement.setAttribute("class", "card")
@@ -88,7 +88,7 @@ async function get_comments_by_id(){
         // let end = bugId.lastIndexOf('/');
         // let bugId = bugIdUrl.slice(start, end)
 
-        const res = await fetch(`bug/${bugId}/comments`)
+        const res = await fetch(`bug/${bugIdComment}/comments`)
         if (res.status != 200){
             create_error_message("No comments to be found. Bug doesn't exist!")
             const message = `Couldn't obtain requests! An error occured: ${res.status} ${res.statusText}`
@@ -145,9 +145,9 @@ function check_for_error_message() {
 
 function validateLength(commentTextArea) {
     if (commentTextArea.length >= 10 && commentTextArea.length <= 1000) {
-        create_error_message("Make sure your comment is between 10 and 1000 characters!")
         return true;
     }
+    create_error_message("Make sure your comment is between 10 and 1000 characters!")
     return false;
 }
 
@@ -165,7 +165,7 @@ async function submit_comment() {
             // let end = bugId.lastIndexOf('/');
             // let bugId = bugIdUrl.slice(start, end)
 
-            const res = await fetch(`bug/${bugId}/comments`, {
+            const res = await fetch(`bug/${bugIdComment}/comments`, {
                 headers: {
                     'Content-Type': 'application/json'
                 //    'Authorization': parsedJson.token
@@ -202,5 +202,3 @@ get_comments_by_id()
 
 let submitCommentButton = document.querySelector('#submit-comment-button')
 submitCommentButton.addEventListener("click", submit_comment)
-
-}
