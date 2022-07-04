@@ -2,9 +2,10 @@ package domain.request;
 
 import lombok.*;
 
-@Getter
-@Builder
+@Data
+@NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class AuthRequest {
     private String username;
     private String password;

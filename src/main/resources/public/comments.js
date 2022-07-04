@@ -83,12 +83,19 @@ function create_error_message(errorMessage) {
 
 async function get_comments_by_id(){
     try {
-        // let bugIdUrl = window.location.pathname;
-        // let start = bugId.indexOf('/');
-        // let end = bugId.lastIndexOf('/');
-        // let bugId = bugIdUrl.slice(start, end)
+        
+        let jwtJson = localStorage.getItem('login')
+        let parsedJson = JSON.parse(jwtJson)
+        let bugIdUrl = window.location.pathname;
+        let start = bugId.indexOf('/');
+        let end = bugId.lastIndexOf('/');
+        let bugIdComment = bugIdUrl.slice(start, end)
 
-        const res = await fetch(`bug/${bugIdComment}/comments`)
+        const res = await fetch(`bug/${bugIdComment}/comments`, {
+            headers: {
+                //    'Authorization': parsedJson.token
+            }
+        })
         if (res.status != 200){
             create_error_message("No comments to be found. Bug doesn't exist!")
             const message = `Couldn't obtain requests! An error occured: ${res.status} ${res.statusText}`
@@ -158,12 +165,12 @@ async function submit_comment() {
             disable_comment_button()
             check_for_error_message()
 
-            // let jwtJson = localStorage.getItem('login')
-            // let parsedJson = JSON.parse(jwtJson)
-            // let bugIdUrl = window.location.pathname;
-            // let start = bugId.indexOf('/');
-            // let end = bugId.lastIndexOf('/');
-            // let bugId = bugIdUrl.slice(start, end)
+            let jwtJson = localStorage.getItem('login')
+            let parsedJson = JSON.parse(jwtJson)
+            let bugIdUrl = window.location.pathname;
+            let start = bugIdUrl.indexOf('/');
+            let end = bugIdUrl.lastIndexOf('/');
+            let bugIdComment = bugIdUrl.slice(start, end)
 
             const res = await fetch(`bug/${bugIdComment}/comments`, {
                 headers: {

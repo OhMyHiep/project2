@@ -50,16 +50,9 @@ public class Project2 {
 
         app.start();
 
-        app.get("/", ctx->{
-            ctx.render("bug.html");
-        }, Role.RoleTitle.Programmer);
         app.get("bug/{bug_id}/comments", BugCommentController.viewAllCommentsRequest,Role.RoleTitle.Programmer);
         app.post("bug/{bug_id}/comments", BugCommentController.createCommentRequest,Role.RoleTitle.Programmer);
         app.get("/comments/comment/{commentId}", BugCommentController.getCommentByIdRequest,Role.RoleTitle.Programmer);
-
-        app.get("/view", ctx->{
-            ctx.render("bugView.html");
-        });
 
         app.delete("/bug/{bug_id}",BugController.deleteBugById,Role.RoleTitle.Programmer);
         app.get("/bug/{bug_id}", BugController.getBugById, Role.RoleTitle.Programmer);
@@ -83,9 +76,9 @@ public class Project2 {
         },Role.RoleTitle.Programmer);
         app.get("/detailBug",ctx->{ctx.render("bug.html");
         },Role.RoleTitle.Programmer);
-        app.get("/login",ctx->{ctx.render("login.html");
+        app.get("/",ctx->{ctx.render("login.html");
         },Role.RoleTitle.Everyone);
-        app.get("/bugView",ctx->{ctx.render("bugView.html");
+        app.get("/view",ctx->{ctx.render("bugView.html");
         },Role.RoleTitle.Programmer);
 //        app.get("/managerReviewBug",ctx->{ctx.render("managerReviewBug.html");
 //        },Role.RoleTitle.TechLead);

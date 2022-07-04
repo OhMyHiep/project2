@@ -20,7 +20,13 @@ public class AuthController {
 
     public static Handler login = ctx -> {
         AuthRequest login= ctx.bodyAsClass(AuthRequest.class);
-        ctx.json(authService.buildJwt(login));
+        if (login != null) {
+            ctx.json(authService.buildJwt(login));
+        }
+        else {
+            ctx.result("Invalid login json");
+            ctx.status(400);
+        }
     };
 
 
