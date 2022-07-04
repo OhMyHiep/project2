@@ -103,14 +103,12 @@ async function get_comments_by_id(){
         console.log(err)
     }     
 }
-
-get_comments_by_id()
-
 // DISPLAY COMMENTS END
 
 
 
 // SUBMIT COMMENT START
+
 function remove_no_comment_message() {
     let removeMessage = document.querySelector('#no-comment') 
     
@@ -145,42 +143,56 @@ function check_for_error_message() {
     }
 }
 
-async function submit_comment() {
-    try {
-        disable_comment_button()
-        let textForComment = document.querySelector('#comment-textarea')
-        check_for_error_message()
-        // let bugIdUrl = window.location.pathname;
-        // let start = bugId.indexOf('/');
-        // let end = bugId.lastIndexOf('/');
-        // let bugId = bugIdUrl.slice(start, end)
-
-        const res = await fetch(`bug/${bugId}/comments`, {
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            method: 'POST',
-            body: JSON.stringify({
-                'bugId': bugId, //need to remove hard code once understand jwt implementation
-                'commenterUserId': '1',
-                'commentText': textForComment.value
-            })
-        })
-        if (res.status != 200){
-            create_error_message("Make sure your comment is between 10 and 1000 characters!")
-            enable_comment_button()
-            const message = `Couldn't create comment! An error occured: ${res.status}`
-            throw message
-        }
-        else {
-            const commentJson = await res.json()
-            append_new_comment(commentJson)
-            enable_comment_button()
-            textForComment.value = ''
-        }
+function validateLength(commentTextArea) {
+    if (commentTextArea.length >= 10 && commentTextArea.length <= 1000) {
+        create_error_message("Make sure your comment is between 10 and 1000 characters!")
+        return true;
     }
-    catch (err) {
-        console.log(err)
+    return false;
+}
+
+async function submit_comment() {
+    let textForComment = document.querySelector('#comment-textarea')
+    if (validateLength(textForComment.value)) {
+        try {
+            disable_comment_button()
+            check_for_error_message()
+
+            // let jwtJson = localStorage.getItem('login')
+            // let parsedJson = JSON.parse(jwtJson)
+            // let bugIdUrl = window.location.pathname;
+            // let start = bugId.indexOf('/');
+            // let end = bugId.lastIndexOf('/');
+            // let bugId = bugIdUrl.slice(start, end)
+
+            const res = await fetch(`bug/${bugId}/comments`, {
+                headers: {
+                    'Content-Type': 'application/json'
+                //    'Authorization': parsedJson.token
+                },
+                method: 'POST',
+                body: JSON.stringify({
+                    'bugId': bugId, //need to remove hard code once understand jwt implementation
+                    'commenterUserId': '1',
+                    'commentText': textForComment.value
+                })
+            })
+            if (res.status != 200){
+                create_error_message("Something went wrong!")
+                enable_comment_button()
+                const message = `Couldn't create comment! An error occured: ${res.status}`
+                throw message
+            }
+            else {
+                const commentJson = await res.json()
+                append_new_comment(commentJson)
+                enable_comment_button()
+                textForComment.value = ''
+            }
+        }
+        catch (err) {
+            console.log(err)
+        }
     }
 }
 // SUBMIT COMMENT END
