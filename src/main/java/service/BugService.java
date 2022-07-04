@@ -15,7 +15,6 @@ import entity.dto.UserDto;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -92,9 +91,8 @@ public class BugService {
                 ||!creator_idIsValidForInsert(bug.getCreator_id())
                 ||!titleIsValidForInsert(bug.getTitle())
         ) return null;
-
         bug.setStatus(1);
-        bug.setIssueDate(new java.sql.Date(new Date().getTime()));
+        bug.setIssueDate(new java.sql.Date(System.currentTimeMillis()));
         bug.setDescription(bug.getDescription().trim());
         Bug insertedBug = Bug.builder()
                 .bug_id(bugDao.insert(bug))
@@ -115,6 +113,7 @@ public class BugService {
                 || !descriptionIsValidForUpdate(bug.getDescription())
                 || !titleIsValidForUpdate(bug.getTitle())
         )return null;
+        if(bug.getStatus()==4) bug.setCloseDate(new java.sql.Date(System.currentTimeMillis()));
         Bug queryBug=bugDao.getById(bug.getBug_id());
         if (queryBug==null) return null;
         if(bug.getAssigned_to()!=null && assigned_toIsValidForUpdate(bug.getAssigned_to())) bug.setAssignDate(new java.sql.Date(System.currentTimeMillis()));
