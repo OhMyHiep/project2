@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 public class AuthService {
 
+    private RoleDao rd = new RoleDao();
     private UserDao ud = new UserDao();
     private UserService userService = new UserService();
 
@@ -45,20 +46,16 @@ public class AuthService {
 
         String[] roleSplit = roleString.split(",");
 
-        RoleDao rd = new RoleDao();
         ArrayList<Role> possibleRoles = (ArrayList<Role>) rd.getAll();
-
         ArrayList<Role> chosenRoles = new ArrayList<Role>();
 
         for (String r : roleSplit) {
             for (Role r2 : possibleRoles) {
-                if (r.toLowerCase().equals(r2.getRole_title().toString().toLowerCase())) {
+                if (r.equalsIgnoreCase(r2.getRole_title().toString())) {
                     chosenRoles.add(r2);
                 }
             }
         }
-
-
         User theUser = ud.getById(Integer.valueOf(user_id));
         return new Tuple<ArrayList<Role>,User>(chosenRoles,theUser);
     }
@@ -97,10 +94,10 @@ public class AuthService {
         String pw = login.getPassword();
 
         String roleString = AuthenticationDao.authenticate(username,pw);
+        if (roleString==null) return null;
         String[] splitted = roleString.split(",");
 
         ArrayList<Role> roles = new ArrayList<>();
-        RoleDao rd = new RoleDao();
 
         for (String s: splitted) {
             roles.add(rd.getByTitle(s));
@@ -109,8 +106,6 @@ public class AuthService {
         List<RoleDto> RoleDtolist = roles.stream()
                 .map(role->RoleService.roleDtoMapper(role))
                 .collect(Collectors.toList());
-
-        UserDao ud = new UserDao();
         User u = ud.getByCredentials(username,pw);
 
         String token = buildJwt(new Tuple<ArrayList<Role>,User>(roles,u));

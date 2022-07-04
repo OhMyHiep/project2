@@ -121,8 +121,7 @@ public class BugCommentDao implements BasicCrud<BugComment> {
 
     public List<BugComment> getBugByCreatorId(Integer commenterUserId) {
         JDBCUtils conn = new JDBCUtils();
-        String sql = "SELECT * FROM project2.BugComment WHERE commenterUserId=?;";
-
+        String sql = "SELECT * FROM project2.BugComment WHERE commenter_id=?;";
         ResultSet rs = conn.executeQuery(sql,commenterUserId);
         List<BugComment> listOfComments = new ArrayList<>();
         try {
@@ -140,6 +139,5 @@ public class BugCommentDao implements BasicCrud<BugComment> {
         }
 
         return null;
-
     }
 }

@@ -24,34 +24,33 @@ public class AuthenticationDao {
     public static String authenticate(String username, String password) {
         JDBCUtils dbUtil = new JDBCUtils();
         String qry = "SELECT * FROM project2.Users WHERE username=? AND passwd=?;";
-        String hashedPass = Cryptographer.MD5(password);
+//        String hashedPass = Cryptographer.MD5(password);
 
         String roles = "";
 
-        ResultSet r = dbUtil.executeQuery(qry, username, hashedPass);
-
+        ResultSet r = dbUtil.executeQuery(qry, username, password);
         ArrayList<String> results = new ArrayList<String>();
-
+//        System.out.println("result has next");
         try {
             while (r.next()) {
-                results.add(r.getString(0));
+                results.add(r.getString(1));
             }
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            System.out.println(e);
+        }
 
-        if (results.size() == 1) {
-            String qry2 = "SELECT role_title FROM "+
-                            "((project2.users INNER JOIN project2.userroles " +
-                            "ON project2.users.user_id = project2.userroles.user_id) " +
-                            "AS stuff" +
-                            "INNER JOIN project2.roles ON project2.roles.role_id = stuff.role_id)" +
-                            "WHERE project2.users.username = ?;";
+        if (results.size() > 0) {
+            String qry2 = "select r.role_title " +
+                    "from project2.users u join project2.userroles ur on ur.user_id = u.user_id " +
+                    "join project2.roles r on r.role_id = ur.role_id " +
+                    "where username = ?;";
 
             ResultSet r2 = dbUtil.executeQuery(qry2, username);
 
 
             try {
                 while (r2.next()) {
-                    roles = roles + r2.getString(0) + ",";
+                    roles = roles + r2.getString(1) + ",";
                 }
             } catch (Exception e) {}
 
