@@ -56,20 +56,22 @@ async function getAssignedBugs(currentUser_id){
 
 
 let bugInfo=``
+let subString
 function displayBugs(data)
 {
                 console.log(data)
-                console.log(data.status)
+                console.log(data.url)
+                subString = data.url.split("/")
+                let bug_id=subString[2]
                 var issueDate = new Date(data.issueDate);
                 bugInfoHolder=document.querySelector("#bugViewer");
                 bugInfo+=
                     `<div class="card">
                     <div class="card-body">
                         <h6 class="card-subtitle mb-2 text-muted">Title: ${data.title} Issue Date: ${issueDate.getMonth()+1}/${issueDate.getDate()}/${issueDate.getFullYear()} Status: ${data.status} Urgency: ${data.urgency} Severity: ${data.severity}</h6>
-                        <p class="card-text">Description: ${data.description}</p>
                     </div>
                     <div>
-                        <a class="btn btn-primary" id="viewAllBtn" href=${data.url}>View Full Details</a><br>
+                        <a class="btn btn-primary" id="viewAllBtn" href="/detailBug?id=${bug_id}">View Full Details</a><br>
                     </div>
                 </div><br>`
 
