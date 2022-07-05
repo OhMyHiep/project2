@@ -1,3 +1,6 @@
+
+//this function create elements that display error/success message
+//import and append this to where you want to display the error message
 function giveFeedback(status){
     let message=document.createElement("div");
     if(status!=200){

@@ -89,16 +89,16 @@ async function get_comments_by_id(){
         // let bugId = bugIdUrl.slice(start, end)
 
         // const res = await fetch(`bug/${bugId}/comments`)
-        const res = await fetch(`bug/2/comments`)
-        const commentJson = await res.json()
-        console.log(commentJson)
-        
-        let jwtJson = localStorage.getItem('login')
-        let parsedJson = JSON.parse(jwtJson)
-        let bugIdUrl = window.location.pathname;
-        let start = bugId.indexOf('/');
-        let end = bugId.lastIndexOf('/');
-        let bugIdComment = bugIdUrl.slice(start, end)
+        // const res = await fetch(`bug/2/comments`)
+        // const commentJson = await res.json()
+        // console.log(commentJson)
+        //
+        // let jwtJson = localStorage.getItem('login')
+        // let parsedJson = JSON.parse(jwtJson)
+        // let bugIdUrl = window.location.pathname;
+        // let start = bugId.indexOf('/');
+        // let end = bugId.lastIndexOf('/');
+        // let bugIdComment = bugIdUrl.slice(start, end)
 
         const res = await fetch(`bug/${bugIdComment}/comments`, {
             headers: {
