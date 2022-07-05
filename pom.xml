@@ -115,9 +115,9 @@
                 <configuration>
 <!--                    <skipTests>true</skipTests>-->
                     <suiteXmlFiles>
-<!--                        <suiteXmlFile>src/test/resources/test_suite_comments.xml</suiteXmlFile>-->
+                        <suiteXmlFile>src/test/resources/test_suite_comments.xml</suiteXmlFile>
 <!--                        <suiteXmlFile>src/test/resources/test_suite_bugs.xml</suiteXmlFile>-->
-                        <suiteXmlFile>src/test/resources/selenium_test_suite.xml</suiteXmlFile>
+<!--                        <suiteXmlFile>src/test/resources/selenium_test_suite.xml</suiteXmlFile>-->
                     </suiteXmlFiles>
                 </configuration>
             </plugin>
