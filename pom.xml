@@ -32,12 +32,6 @@
         </dependency>
 
         <dependency>
-            <groupId>io.javalin</groupId>
-            <artifactId>javalin</artifactId>
-            <version>4.6.1</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.20</version>
@@ -104,7 +98,12 @@
             <artifactId>selenium-java</artifactId>
             <version>4.2.1</version>
         </dependency>
-
+        <!-- https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin -->
+<!--        <dependency>-->
+<!--            <groupId>org.jacoco</groupId>-->
+<!--            <artifactId>jacoco-maven-plugin</artifactId>-->
+<!--            <version>0.8.8</version>-->
+<!--        </dependency>-->
     </dependencies>
     <build>
         <plugins>
@@ -115,16 +114,25 @@
                 <configuration>
 <!--                    <skipTests>true</skipTests>-->
                     <suiteXmlFiles>
-                        <suiteXmlFile>src/test/resources/test_suite_comments.xml</suiteXmlFile>
+<!--                        <suiteXmlFile>src/test/resources/test_suite_comments.xml</suiteXmlFile>-->
 <!--                        <suiteXmlFile>src/test/resources/test_suite_bugs.xml</suiteXmlFile>-->
 <!--                        <suiteXmlFile>src/test/resources/selenium_test_suite.xml</suiteXmlFile>-->
+<!--                        <suiteXmlFile>src/test/resources/selenium_bug_submission_suit.xml</suiteXmlFile>-->
+                        <suiteXmlFile>src/test/resources/selenium_bug_update.xml</suiteXmlFile>
                     </suiteXmlFiles>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.7.7.201606060606</version>
+                <version>0.8.8</version>
                 <executions>
                     <execution>
                         <goals>
@@ -139,13 +147,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
             </plugin>
         </plugins>
     </build>
