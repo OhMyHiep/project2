@@ -24,6 +24,4 @@ public class UserResponse {
     private List<BugDto> assignedBugs;
     private List<BugCommentDto> comments;
     private List<RoleDto> roles;
-
-
 }
