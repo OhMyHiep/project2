@@ -7,15 +7,15 @@ function logOut() {
 
 function checkLogin() {
     if (localStorage.getItem("login") === null) {
-        window.location.replace("http://localhost:8000/")
+        window.location.replace("http://localhost:8080/")
     }
-    else if (localStorage.getItem("login") && window.location.href !== "http://localhost:8000/") {
-        window.location.replace("http://localhost:8000/bugView")
+    else if (localStorage.getItem("login") && window.location.href !== "http://localhost:8080/") {
+        window.location.replace("http://localhost:8080/bugView")
     }
 }
 
 function checkPage() {
-    if (window.location.href !== "http://localhost:8000/") {
+    if (window.location.href !== "http://localhost:8080/") {
         checkLogin()
     }
 }
