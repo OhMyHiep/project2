@@ -4,7 +4,14 @@ getAllBugs()
 async function getAllBugs(){
     let url="/bug"
     try{
+        let loginInfo=localStorage.getItem("login")
+        let jsonLoginInfo=JSON.parse(loginInfo)
+        console.log(jsonLoginInfo)
         let response_body = await fetch(url,{
+        headers:{
+               'Content-Type': 'application/json',
+               'Authorization': jsonLoginInfo.token
+        },
         method: "GET"
         })
         let data = await response_body.json()
@@ -38,8 +45,8 @@ async function getAssignedBugs(currentUser_id){
             for(let bugs in data)
                 for(let bug in data[bugs])
                     {
-                        targetUrl= data[bugs][bug].url
-                        getBugInfo(targetUrl)
+                        //targetUrl= data[bugs][bug].url
+                        displayBugs(data[bugs][bug])
                     }
         }
     }catch(e){
@@ -47,17 +54,7 @@ async function getAssignedBugs(currentUser_id){
         }
 }
 
-async function getBugInfo(url){
-     try{
-            let response_body = await fetch(url,{
-            method: "GET"
-            })
-            let data = await response_body.json()
-            displayBugs(data)
-        }catch(e){
-            console.log(e)
-            }
-}
+
 let bugInfo=``
 function displayBugs(data)
 {
@@ -68,12 +65,11 @@ function displayBugs(data)
                 bugInfo+=
                     `<div class="card">
                     <div class="card-body">
-                        <h6 class="card-subtitle mb-2 text-muted">Created By: ${data.creator.firstname} ${data.creator.lastname} Issue Date: ${issueDate.getMonth()+1}/${issueDate.getDate()}/${issueDate.getFullYear()} Status: ${data.status} Urgency: ${data.urgency} Severity: ${data.severity}</h6>
+                        <h6 class="card-subtitle mb-2 text-muted">Title: ${data.title} Issue Date: ${issueDate.getMonth()+1}/${issueDate.getDate()}/${issueDate.getFullYear()} Status: ${data.status} Urgency: ${data.urgency} Severity: ${data.severity}</h6>
                         <p class="card-text">Description: ${data.description}</p>
                     </div>
                     <div>
-                        <button type="button" class="btn btn-primary" id="viewAllBtn" name=${data.bug_id} onclick=generatePopup(${data.bug_id})>View Full Details</button>
-                        <button type="button" class="btn btn-primary" id ="viewCommentsBtn" name=${data.bug_id}> View Comments</button><br>
+                        <a class="btn btn-primary" id="viewAllBtn" href=${data.url}>View Full Details</a><br>
                     </div>
                 </div><br>`
 
@@ -81,8 +77,4 @@ function displayBugs(data)
 }
 
 
-function generatePopup(bug_id)
-{
- console.log(bug_id)
-}
 

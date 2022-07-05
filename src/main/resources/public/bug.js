@@ -6,7 +6,12 @@ window.addEventListener("load", () => {
 });
 
 async function getBug(){
-    const res = await fetch(`bug/${bugId}`)
+    const res = await fetch(`bug/${bugId}`,{
+        headers:{
+        'Content-Type': 'application/json',
+        'Authorization': jsonLoginInfo.token
+        },
+        method: "GET"})
         .then(result =>{
             return result.json();
         }).then(jsonObj=>{
