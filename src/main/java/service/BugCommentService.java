@@ -57,6 +57,7 @@ public class BugCommentService {
                 //set time to server time
                 bugComment.setCommentDate(new Date(System.currentTimeMillis()));
                 Integer result = bugCommentDao.insert(bugComment);
+                bugComment.setCommentId(result);
                 if (result > 0) {
                     BugCommentDto dtoComment = BugCommentDtoMapper(bugComment);
                     UserDto dtoUser = UserService.userDtoMapper(commenterExists);
@@ -111,9 +112,9 @@ public class BugCommentService {
 
     public BugCommentResponse getCommentById(Integer commentId) {
         BugComment comment = bugCommentDao.getById(commentId);
-        User user = userDao.getById(comment.getCommenterUserId());
 
         if (comment != null) {
+            User user = userDao.getById(comment.getCommenterUserId());
             BugCommentResponse res = convertToCommentResponse(comment, BugCommentDtoMapper(comment), UserService.userDtoMapper(user));
             return res;
         }

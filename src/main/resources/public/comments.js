@@ -1,5 +1,3 @@
-let bugIdComment = 5
-
 // DISPLAY COMMENTS START
 function convertDate(date) {
     let dateConvert = new Date();
@@ -83,16 +81,14 @@ function create_error_message(errorMessage) {
 
 async function get_comments_by_id(){
     try {
-        // let jwtJson = localStorage.getItem('login')
-        // let parsedJson = JSON.parse(jwtJson)
-        // let bugIdUrl = window.location.pathname;
-        // let start = bugId.indexOf('/');
-        // let end = bugId.lastIndexOf('/');
-        // let bugIdComment = bugIdUrl.slice(start, end)
+        let loginInfo = localStorage.getItem('login')
+        let parsedJson = JSON.parse(loginInfo)
+        let qString = window.location.search;
+            const urlParams = new URLSearchParams(qString)
 
-        const res = await fetch(`bug/${bugIdComment}/comments`, {
+        const res = await fetch(`bug/${urlParams.get('bugId')}/comments`, {
             headers: {
-                //    'Authorization': parsedJson.token
+                   'Authorization': parsedJson.token
             }
         })
 
@@ -165,22 +161,20 @@ async function submit_comment() {
             disable_comment_button()
             check_for_error_message()
 
-            let jwtJson = localStorage.getItem('login')
-            let parsedJson = JSON.parse(jwtJson)
-            let bugIdUrl = window.location.pathname;
-            let start = bugIdUrl.indexOf('/');
-            let end = bugIdUrl.lastIndexOf('/');
-            let bugIdComment = bugIdUrl.slice(start, end)
+            let loginInfo = localStorage.getItem('login')
+            let parsedJson = JSON.parse(loginInfo)
+            let qString = window.location.search;
+            const urlParams = new URLSearchParams(qString)
 
-            const res = await fetch(`bug/${bugIdComment}/comments`, {
+            const res = await fetch(`bug/${urlParams.get('bugId')}/comments`, {
                 headers: {
-                    'Content-Type': 'application/json'
-                //    'Authorization': parsedJson.token
+                    'Content-Type': 'application/json',
+                    'Authorization': parsedJson.token
                 },
                 method: 'POST',
                 body: JSON.stringify({
-                    'bugId': bugId, //need to remove hard code once understand jwt implementation
-                    'commenterUserId': '1',
+                    'bugId': urlParams.get('bugId'),
+                    'commenterUserId': parsedJson.user.user_id,
                     'commentText': textForComment.value
                 })
             })

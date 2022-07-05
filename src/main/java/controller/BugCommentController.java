@@ -24,13 +24,19 @@ public class BugCommentController {
 
     public static Handler createCommentRequest = ctx -> {
         BugComment bugComment = deserializeComment(ctx);
-        BugCommentResponse creationResult = bugCommentService.createComment(bugComment);
-        if (creationResult != null) {
-            ctx.json(creationResult);
-        }
-        else {
+        if (bugComment == null) {
             ctx.result("Failed to make comment. Make sure you have the proper format and an existing bug.");
             ctx.status(400);
+        }
+        else {
+            BugCommentResponse creationResult = bugCommentService.createComment(bugComment);
+            if (creationResult != null) {
+                ctx.json(creationResult);
+            }
+            else {
+                ctx.result("Failed to make comment. Make sure you have the proper format and an existing bug.");
+                ctx.status(400);
+            }
         }
     };
 
