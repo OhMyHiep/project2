@@ -1,8 +1,0 @@
-<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
-<suite name="Selenium Bug Test Suite">
-    <test name="test bug Submission">
-        <classes>
-            <class name="TestBugSubmissionRunner"/>
-        </classes>
-    </test>
-</suite>
