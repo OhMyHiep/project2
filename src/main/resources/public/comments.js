@@ -84,7 +84,7 @@ async function get_comments_by_id(){
         let loginInfo = localStorage.getItem('login')
         let parsedJson = JSON.parse(loginInfo)
         let qString = window.location.search;
-            const urlParams = new URLSearchParams(qString)
+        const urlParams = new URLSearchParams(qString)
 
         const res = await fetch(`bug/${urlParams.get('id')}/comments`, {
             headers: {

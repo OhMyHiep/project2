@@ -10,6 +10,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.Select;
 import pagefactory.BugSubmissionPageFactory;
 import pagefactory.LoginPageFactory;
 
@@ -38,7 +39,8 @@ public class BugSubmissionSteps {
     @Given("I am logged in and on The bug submission page")
     public void iAmLoggedInAndOnTheBugSubmissionPage() {
         loginPageFactory.login("email@email.com", "pass");
-        driver.get("http://localhost:8080/view");
+        WebElement goButton = driver.findElement(By.id("goToSubmission"));
+        goButton.click();
 
     }
 
@@ -54,12 +56,14 @@ public class BugSubmissionSteps {
 
     @And("I input out the {string}")
     public void iInputOutThe(String severity) {
-        bugPageFactory.inputSeverity(severity);
+        Select severityElement = new Select(driver.findElement(By.id("severity")));
+        severityElement.selectByValue(severity);
     }
 
     @And("I set the {string}")
     public void iSetThe(String urgency) {
-        bugPageFactory.inputUrgency(urgency);
+        Select urgencyElement = new Select(driver.findElement(By.id("urgency")));
+        urgencyElement.selectByValue(urgency);
     }
 
     @And("I click submit")

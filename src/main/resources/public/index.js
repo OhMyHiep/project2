@@ -78,5 +78,9 @@ function displayBugs(data)
                 bugInfoHolder.innerHTML=bugInfo
 }
 
+function goToBugSubmission() {
+    window.location.replace("http://localhost:8080/bugSubmission")
+}
 
+document.querySelector("#goToSubmission").addEventListener('click', goToBugSubmission)
 

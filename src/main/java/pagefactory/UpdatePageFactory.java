@@ -21,7 +21,7 @@ public class UpdatePageFactory {
     @FindBy(id="update-status")
     Select updateStatus;
 
-    @FindBy(id ="submit")
+    @FindBy(id ="update-input")
     WebElement submitBtn;
 
     public UpdatePageFactory(WebDriver webDriver){

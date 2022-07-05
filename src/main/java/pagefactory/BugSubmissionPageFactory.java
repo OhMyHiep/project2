@@ -30,7 +30,12 @@ public class BugSubmissionPageFactory {
     }
 
     public void inputTitle(String text){
-        titleInput.sendKeys(text);
+        if (text.equals("empty")) {
+            titleInput.sendKeys("");
+        }
+        else {
+            titleInput.sendKeys(text);
+        }
     }
 
     public void inputDescription(String text){
@@ -38,11 +43,13 @@ public class BugSubmissionPageFactory {
     }
 
     public void inputSeverity(String text){
-        severityInput.selectByVisibleText(text);
+        Integer num = new Integer(text);
+        severityInput.selectByIndex(num);
     }
 
     public void inputUrgency(String text){
-        urgencyInput.selectByVisibleText(text);
+        Integer num = new Integer(text);
+        urgencyInput.selectByIndex(num);
     }
 
     public void clickSubmit(){
