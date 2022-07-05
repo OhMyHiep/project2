@@ -17,7 +17,7 @@ async function getAllBugs(){
                 for(let bug in data[bugs])
                 {
                     targetUrl= data[bugs][bug].url
-                    getBugInfo(targetUrl)
+                     displayBugs(data[bugs][bug])
                 }
         }
     }catch(e){
