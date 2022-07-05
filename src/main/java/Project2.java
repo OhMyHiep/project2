@@ -50,6 +50,9 @@ public class Project2 {
 
         app.start();
 
+        app.get("bug/{bug_id}/comments", BugCommentController.viewAllCommentsRequest,Role.RoleTitle.Programmer);
+        app.post("bug/{bug_id}/comments", BugCommentController.createCommentRequest,Role.RoleTitle.Programmer);
+        app.get("/comments/comment/{commentId}", BugCommentController.getCommentByIdRequest,Role.RoleTitle.Programmer);
 
         app.delete("/bug/{bug_id}",BugController.deleteBugById,Role.RoleTitle.Programmer);
         app.get("/bug/{bug_id}", BugController.getBugById, Role.RoleTitle.Programmer);
@@ -57,10 +60,6 @@ public class Project2 {
         app.post("/bug",BugController.addBug,Role.RoleTitle.Programmer);
         app.patch("/bug",BugController.updateBug,Role.RoleTitle.Programmer);
         app.get("/bug/assign/{assignedTo}",BugController.bugsByAssignee,Role.RoleTitle.Programmer);
-
-        app.get("/comments/{bug_id}/comments",BugCommentController.viewAllCommentsRequest,Role.RoleTitle.Programmer);
-        app.post("/comments/{bug_id}/comments",BugCommentController.createCommentRequest,Role.RoleTitle.Programmer);
-        app.get("/comments/comment/{commentId}", BugCommentController.getCommentByIdRequest,Role.RoleTitle.Programmer);
 
         app.get("/user", UserController.getAll,Role.RoleTitle.Programmer);
         app.post("/login", AuthController.login, Role.RoleTitle.Everyone);
