@@ -113,7 +113,7 @@ public class BugService {
                 || !descriptionIsValidForUpdate(bug.getDescription())
                 || !titleIsValidForUpdate(bug.getTitle())
         )return null;
-        if(bug.getStatus()==4) bug.setCloseDate(new java.sql.Date(System.currentTimeMillis()));
+        if(bug.getStatus()!=null && bug.getStatus()==4) bug.setCloseDate(new java.sql.Date(System.currentTimeMillis()));
         Bug queryBug=bugDao.getById(bug.getBug_id());
         if (queryBug==null) return null;
         if(bug.getAssigned_to()!=null && assigned_toIsValidForUpdate(bug.getAssigned_to())) bug.setAssignDate(new java.sql.Date(System.currentTimeMillis()));

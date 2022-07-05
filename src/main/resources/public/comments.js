@@ -86,14 +86,14 @@ async function get_comments_by_id(){
         let qString = window.location.search;
             const urlParams = new URLSearchParams(qString)
 
-        const res = await fetch(`bug/${urlParams.get('bugId')}/comments`, {
+        const res = await fetch(`bug/${urlParams.get('id')}/comments`, {
             headers: {
                    'Authorization': parsedJson.token
             }
         })
 
         if (res.status != 200){
-            create_error_message("No comments to be found. Bug doesn't exist!")
+            create_error_message("No comments to be found")
             const message = `Couldn't obtain requests! An error occured: ${res.status} ${res.statusText}`
             throw message
         }
@@ -166,7 +166,7 @@ async function submit_comment() {
             let qString = window.location.search;
             const urlParams = new URLSearchParams(qString)
 
-            const res = await fetch(`bug/${urlParams.get('bugId')}/comments`, {
+            const res = await fetch(`bug/${urlParams.get('id')}/comments`, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': parsedJson.token

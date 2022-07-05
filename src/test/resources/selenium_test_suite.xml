@@ -1,7 +1,7 @@
-<!--<suite name="Selenium Test Suite">-->
-<!--    <test name="placeholder">-->
-<!--        <classes>-->
-<!--            <class name="TestRunner"/>-->
-<!--        </classes>-->
-<!--    </test>-->
-<!--</suite>-->
+<suite name="Selenium Test Suite">
+    <test name="placeholder">
+        <classes>
+            <class name="TestRunner"/>
+        </classes>
+    </test>
+</suite>
