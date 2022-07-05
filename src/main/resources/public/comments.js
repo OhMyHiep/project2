@@ -86,7 +86,7 @@ async function get_comments_by_id(){
         let qString = window.location.search;
             const urlParams = new URLSearchParams(qString)
 
-        const res = await fetch(`bug/${urlParams.get('bugId')}/comments`, {
+        const res = await fetch(`bug/${urlParams.get('id')}/comments`, {
             headers: {
                    'Authorization': parsedJson.token
             }
@@ -166,14 +166,14 @@ async function submit_comment() {
             let qString = window.location.search;
             const urlParams = new URLSearchParams(qString)
 
-            const res = await fetch(`bug/${urlParams.get('bugId')}/comments`, {
+            const res = await fetch(`bug/${urlParams.get('id')}/comments`, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': parsedJson.token
                 },
                 method: 'POST',
                 body: JSON.stringify({
-                    'bugId': urlParams.get('bugId'),
+                    'bugId': urlParams.get('id'),
                     'commenterUserId': parsedJson.user.user_id,
                     'commentText': textForComment.value
                 })

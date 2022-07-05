@@ -31,7 +31,7 @@ public class CommentCreationSteps {
         System.setProperty("webdriver.chrome.driver", "src/main/resources/drivers/chromedriver_win32.exe");
         driver = new ChromeDriver();
 
-        driver.manage().timeouts().implicitlyWait(Duration.ofMillis(1000));
+        driver.manage().timeouts().implicitlyWait(Duration.ofMillis(5000));
 
         driver.get("http://localhost:8080/");
 
