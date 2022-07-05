@@ -31,6 +31,22 @@ public class UserDao implements BasicCrud<User> {
         }
     }
 
+    public User getByCredentials(String username, String password) {
+        String qry = "SELECT * FROM project2.Users WHERE username=? AND passwd=?;";
+        ResultSet r = dbUtil.executeQuery(qry,username,password);
+        User u = null;
+        try {
+            while (r.next()) {
+                u = new User(r.getInt("user_id"),r.getString("username"),r.getString("passwd"),
+                        r.getString("firstname"),r.getString("lastname"), r.getString("authtoken"));
+            }
+            return u;
+
+        } catch (Exception e) {
+            return u;
+        }
+    }
+
     @Override
     public List<User> getAll() {
         String qry = "SELECT * FROM project2.Users;";

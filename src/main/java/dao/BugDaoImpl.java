@@ -26,6 +26,7 @@ public class BugDaoImpl implements BasicCrud<Bug> {
            try {
                return rs.next()? Bug.builder()
                        .bug_id(rs.getInt("bug_id"))
+                       .title(rs.getString("title"))
                        .issueDate(rs.getDate("issue_date"))
                        .assignDate(rs.getDate("assign_date"))
                        .closeDate(rs.getDate("close_date"))
@@ -70,12 +71,16 @@ public class BugDaoImpl implements BasicCrud<Bug> {
 
     @Override
     public Integer insert(Bug bug) {
-        String bug_id= bug.getBug_id()==null? "default": bug.getBug_id()+"";
+        return bug.getBug_id()==null? insertNoId(bug).getBug_id():insertHasId(bug).getBug_id();
+    }
+
+    private Bug insertHasId(Bug bug){
         String sql= "INSERT INTO project2.bug " +
-                "(bug_id,issue_date,assigned_to,creator_id,description,status,urgency,severity) " +
-                "VALUES (?,?,?,?,?,?,?,?) RETURNING *";
+                "(bug_id,title,issue_date,assigned_to,creator_id,description,status,urgency,severity) " +
+                "VALUES (?,?,?,?,?,?,?,?,?) RETURNING *";
         ResultSet rs = jdbcUtils.executeQuery(sql,
-                Integer.parseInt(bug_id),
+                bug.getBug_id(),
+                bug.getTitle(),
                 bug.getIssueDate(),
                 bug.getAssigned_to(),
                 bug.getCreator_id(),
@@ -83,19 +88,39 @@ public class BugDaoImpl implements BasicCrud<Bug> {
                 bug.getStatus(),
                 bug.getUrgency(),
                 bug.getSeverity()
-                );
+        );
         Bug insertedBug= rowMapper(rs);
-        return insertedBug.getBug_id();
+        return insertedBug;
     }
+
+    private Bug insertNoId(Bug bug){
+        String sql= "INSERT INTO project2.bug " +
+                "(title,issue_date,assigned_to,creator_id,description,status,urgency,severity) " +
+                "VALUES (?,?,?,?,?,?,?,?) RETURNING *";
+        ResultSet rs = jdbcUtils.executeQuery(sql,
+                bug.getTitle(),
+                bug.getIssueDate(),
+                bug.getAssigned_to(),
+                bug.getCreator_id(),
+                bug.getDescription(),
+                bug.getStatus(),
+                bug.getUrgency(),
+                bug.getSeverity()
+        );
+        Bug insertedBug= rowMapper(rs);
+        return insertedBug;
+    }
+
 
     @Override
     public Integer update(Bug bug) {
         String sql= "UPDATE project2.bug " +
-                "SET assign_date=?,close_date=?, assigned_to=?,description=?,status=?,urgency=?,severity=? " +
+                "SET title=?,assign_date=?,close_date=?, assigned_to=?,description=?,status=?,urgency=?,severity=? " +
                 "WHERE bug_id=? " +
                 "RETURNING *";
 
         return rowMapper(jdbcUtils.executeQuery(sql,
+                bug.getTitle(),
                 bug.getAssignDate(),
                 bug.getCloseDate(),
                 bug.getAssigned_to(),
@@ -108,27 +133,20 @@ public class BugDaoImpl implements BasicCrud<Bug> {
 
     }
 
-    public Bug getBugByUserId(Integer id){
-        String sql= "SELECT *" +
-                "FROM project2.bug " +
-                "where creator_id=?";
-        ResultSet rs= jdbcUtils.executeQuery(sql,id);
-        return rowMapper(rs);
-    }
-
     public void commitTransaction(){
         jdbcUtils.commit();
     }
     public void closeConnection(){
         jdbcUtils.close();
     }
-    public Bug getBugByCreatorId(Integer creator_id) {
-        String sql = "SELECT *" +
-                "FROM project2.bug"+
+
+    public List<Bug> getBugByCreatorId(Integer creator_id) {
+        String sql = "SELECT * " +
+                "FROM project2.bug "+
                 "where creator_id=?";
 
         ResultSet rs= jdbcUtils.executeQuery(sql,creator_id);
-        return rowMapper(rs);
+        return getBugs(creator_id,sql);
     }
 
     @NotNull
@@ -148,7 +166,6 @@ public class BugDaoImpl implements BasicCrud<Bug> {
         String sql = "SELECT *" +
                 "FROM project2.bug "+
                 "WHERE assigned_to= ?";
-
         return getBugs(assignedTo,sql);
     }
 }

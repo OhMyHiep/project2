@@ -33,14 +33,15 @@ public class BugController {
 
     public static Handler addBug=ctx ->{
         Bug bug = ctx.bodyAsClass(Bug.class);
-        if(bug.getIssueDate()==null || bug.getDescription()==null)
+        if(bug.getDescription()==null)
             ctx.html("Invalid Input");
         else ctx.json(bugService.insert(bug));
     };
 
     public static Handler updateBug=ctx->{
         Bug bug = ctx.bodyAsClass(Bug.class);
-        BugListResponse updated=null;
+        System.out.println(bug);
+        BugListResponse updated;
         updated=bugService.update(bug);
         if(updated!=null) ctx.json(updated);
         else ctx.html("not found");
@@ -49,10 +50,11 @@ public class BugController {
 
     public static Handler bugsByAssignee=ctx->{
         Integer assigned_To = Integer.parseInt(ctx.pathParam("assignedTo"));
-        BugListResponse bugs=null;
-        if (assigned_To!=null) bugs=bugService.getByAssignee(assigned_To);
-        if(bugs==null) ctx.html("Not Found");
-        else ctx.json(bugs);
+        BugListResponse bug=null;
+        if (assigned_To!=null) bug=bugService.getByAssignee(assigned_To);
+        if(bug.getBugs().size()=0) ctx.html("Not Found");
+        else ctx.json(bug);
+
     };
 
 }

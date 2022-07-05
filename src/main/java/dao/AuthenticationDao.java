@@ -1,5 +1,7 @@
 package dao;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import org.jetbrains.annotations.Nullable;
 import utils.Constants;
@@ -22,39 +24,42 @@ public class AuthenticationDao {
     public static String authenticate(String username, String password) {
         JDBCUtils dbUtil = new JDBCUtils();
         String qry = "SELECT * FROM project2.Users WHERE username=? AND passwd=?;";
-        String hashedPass = Cryptographer.MD5(password);
+//        String hashedPass = Cryptographer.MD5(password);
 
-        ResultSet r = dbUtil.executeQuery(qry, username, hashedPass);
+        String roles = "";
 
+        ResultSet r = dbUtil.executeQuery(qry, username, password);
         ArrayList<String> results = new ArrayList<String>();
-
+//        System.out.println("result has next");
         try {
             while (r.next()) {
-                results.add(r.getString(0));
+                results.add(r.getString(1));
             }
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            System.out.println(e);
+        }
 
-        if (results.size() == 1) {
-            String qry2 = "SELECT role_id FROM project2.userroles WHERE";
+        if (results.size() > 0) {
+            String qry2 = "select r.role_title " +
+                    "from project2.users u join project2.userroles ur on ur.user_id = u.user_id " +
+                    "join project2.roles r on r.role_id = ur.role_id " +
+                    "where username = ?;";
 
-            Key hmacKey = new SecretKeySpec(Base64.getDecoder().decode(Constants.secretKey),
-                    SignatureAlgorithm.HS256.getJcaName());
+            ResultSet r2 = dbUtil.executeQuery(qry2, username);
 
-            Instant now = Instant.now();
-            String jwtToken = Jwts.builder()
-                    .claim("username", username)
-                    .setSubject("JWT Auth")
-                    .setId(UUID.randomUUID().toString())
-                    .setIssuedAt(Date.from(now))
-                    .setExpiration(Date.from(now.plus(50, ChronoUnit.MINUTES)))
-                    .signWith(hmacKey)
-                    .compact();
 
-            return jwtToken;
+            try {
+                while (r2.next()) {
+                    roles = roles + r2.getString(1) + ",";
+                }
+            } catch (Exception e) {}
+
+
         } else {
             return null;
         }
 
+        return roles;
     }
 
 }
