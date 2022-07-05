@@ -2,7 +2,7 @@ window.addEventListener("load", () => {
     let submitBtn=document.getElementById("submit");
     submitBtn.addEventListener("click",submitBug);
 });
-import {giveFeedback} from "./feeback";
+import {giveFeedback} from "/feeback.js";
 async function submitBug(){
     let creatorId=1
     let title =document.getElementById("title");

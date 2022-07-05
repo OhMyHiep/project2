@@ -15,6 +15,4 @@ public class User {
     private String lastname;
     private String authToken;
 
-
-
 }
