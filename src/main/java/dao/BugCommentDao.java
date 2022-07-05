@@ -33,24 +33,24 @@ public class BugCommentDao implements BasicCrud<BugComment> {
 
     @Override
     public List<BugComment> getAll() {
-        JDBCUtils conn = new JDBCUtils();
-        String sql = "SELECT * FROM project2.BugComment;";
-
-        List<BugComment> listOfComments = new ArrayList<>();
-        try {
-            ResultSet rs = conn.executeQuery(sql);
-            while (rs.next()) {
-                listOfComments.add(new BugComment(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(4), rs.getDate(5)));
-            }
-
-            return listOfComments;
-        }
-        catch (SQLException e){
-            e.printStackTrace();
-        }
-        finally {
-            conn.close();
-        }
+//        JDBCUtils conn = new JDBCUtils();
+//        String sql = "SELECT * FROM project2.BugComment;";
+//
+//        List<BugComment> listOfComments = new ArrayList<>();
+//        try {
+//            ResultSet rs = conn.executeQuery(sql);
+//            while (rs.next()) {
+//                listOfComments.add(new BugComment(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(4), rs.getDate(5)));
+//            }
+//
+//            return listOfComments;
+//        }
+//        catch (SQLException e){
+//            e.printStackTrace();
+//        }
+//        finally {
+//            conn.close();
+//        }
 
         return null;
     }
@@ -80,16 +80,17 @@ public class BugCommentDao implements BasicCrud<BugComment> {
 
     @Override
     public Integer deleteById(Integer id) {
-        JDBCUtils conn = new JDBCUtils();
-        String sql = "DELETE FROM project2.BugComment WHERE comment_id=?;";
-
-        try {
-            Integer result = conn.executeUpdate(sql, id);
-            return result;
-        }
-        finally {
-            conn.close();
-        }
+//        JDBCUtils conn = new JDBCUtils();
+//        String sql = "DELETE FROM project2.BugComment WHERE comment_id=?;";
+//
+//        try {
+//            Integer result = conn.executeUpdate(sql, id);
+//            return result;
+//        }
+//        finally {
+//            conn.close();
+//        }
+        return null;
     }
 
     @Override

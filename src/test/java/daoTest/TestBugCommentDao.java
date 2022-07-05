@@ -4,8 +4,10 @@ import dao.BugCommentDao;
 import entity.BugComment;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import javax.jws.Oneway;
 import java.sql.Date;
 import java.util.List;
 
@@ -47,5 +49,26 @@ public class TestBugCommentDao {
         Integer result = bugCommentDao.insert(insertComment);
 
         Assert.assertTrue(result > 0);
+    }
+
+    @Test
+    public void testGetBugByCreatorId() {
+        List<BugComment> comments = bugCommentDao.getBugByCreatorId(1);
+
+        Assert.assertNotNull(comments);
+    }
+
+    @Test (dataProvider = "dataForCreatorId")
+    public void testGetBugByCreatorIdFail(Integer id) {
+        List<BugComment> comments = bugCommentDao.getBugByCreatorId(id);
+
+        Assert.assertTrue(comments.size() < 1);
+    }
+
+    @DataProvider
+    public Object[][] dataForCreatorId() {
+        return new Object[][] {
+                {3000}, {500}, {422}
+        };
     }
 }

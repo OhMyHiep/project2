@@ -16,6 +16,7 @@ import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import service.BugCommentService;
 import service.UserService;
@@ -41,7 +42,9 @@ public class TestBugCommentService {
 
     private Bug bug;
     private BugComment comment;
+    private BugComment comment2;
     private BugCommentResponse commentResponse;
+    private BugCommentResponse commentResponse2;
     private User user1;
 
     @BeforeClass
@@ -55,10 +58,20 @@ public class TestBugCommentService {
         bug = Bug.builder().bug_id(1).creator_id(1).description("Won't run with dependencies").build();
 
         comment = BugComment.builder().commentId(1).bugId(1).commenterUserId(1).commentText("Maybe try and reload the pom file").commentDate(null).build();
+        comment2 = BugComment.builder().commentId(1).bugId(1).commenterUserId(1).commentText("Maybe try and reload the pom file").commentDate(null).build();
 
         BugCommentDto bugCommentDto = bugCommentService.BugCommentDtoMapper(comment);
         UserDto userDto = UserService.userDtoMapper(user1);
         commentResponse = BugCommentResponse.builder().commentId(comment.getCommentId()).bugId(comment.getBugId()).commenterId(comment.getCommenterUserId()).userUrl(userDto).commentText(comment.getCommentText()).commentDate(comment.getCommentDate()).commentUrl(bugCommentDto).build();
+        commentResponse2 = BugCommentResponse.builder().commentId(comment.getCommentId()).bugId(comment.getBugId()).commenterId(comment.getCommenterUserId()).userUrl(userDto).commentText(comment.getCommentText()).commentDate(comment.getCommentDate()).commentUrl(bugCommentDto).build();
+    }
+
+    @Test
+    public void testEquals() {
+        Assert.assertTrue(comment.equals(comment2) && comment2.equals(comment));
+        Assert.assertTrue(comment.hashCode() == comment2.hashCode());
+        Assert.assertTrue(commentResponse.equals(commentResponse2) && commentResponse2.equals(commentResponse));
+        Assert.assertTrue(commentResponse.hashCode() == commentResponse2.hashCode());
     }
 
     @Test
@@ -79,6 +92,12 @@ public class TestBugCommentService {
 
         List<BugCommentResponse> commentList = bugCommentService.getCommentsForBug(-1);
         Assert.assertEquals(commentList, null);
+    }
+
+    @Test
+    public void testCommentDtoMapperSuccess() {
+        BugCommentDto res = bugCommentService.BugCommentDtoMapper(comment);
+        Assert.assertNotNull(res);
     }
 
     @Test
@@ -122,5 +141,28 @@ public class TestBugCommentService {
         when(mockBugDao.getById(bugComment.getBugId())).thenReturn(outputBug);
         when(mockUserDao.getById(bugComment.getCommenterUserId())).thenReturn(outputUser);
         Assert.assertEquals(bugCommentService.validateValidInputForComments(bugComment, outputUser), result);
+    }
+
+    @Test
+    public void testGetCommentById() {
+        when(mockBugCommentDao.getById(1)).thenReturn(comment);
+        when(mockUserDao.getById(1)).thenReturn(user1);
+
+        Assert.assertEquals(bugCommentService.getCommentById(1), commentResponse);
+    }
+
+    @Test (dataProvider = "bugCommentProviderForId")
+    public void testGetCommentByIdFailure(Integer id, BugCommentResponse res) {
+        when(mockBugCommentDao.getById(id)).thenReturn(null);
+        when(mockUserDao.getById(anyInt())).thenReturn(null);
+
+        Assert.assertEquals(bugCommentService.getCommentById(id), res);
+    }
+
+    @DataProvider
+    public Object[][] bugCommentProviderForId() {
+        return new Object[][] {
+                {0, null} , {3999, null}, {70000, null}
+        };
     }
 }
