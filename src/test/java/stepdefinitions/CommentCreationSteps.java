@@ -13,6 +13,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.Assert;
 import pagefactory.CommentPageFactory;
+import pagefactory.LoginPageFactory;
 
 import java.util.List;
 import java.time.Duration;
@@ -21,6 +22,8 @@ public class CommentCreationSteps {
 
     public WebDriver driver;
     public CommentPageFactory commentPageFactory;
+
+    public LoginPageFactory loginPageFactory;
 
     @Before
     public void setup() {
@@ -33,18 +36,21 @@ public class CommentCreationSteps {
         driver.get("http://localhost:8080/");
 
         commentPageFactory = new CommentPageFactory(driver);
+        loginPageFactory = new LoginPageFactory(driver);
     }
 
     @Given("I am logged in as John Smith")
     public void i_am_logged_in_as_john_smith() {
         // Write code here that turns the phrase above into concrete actions
-
+        loginPageFactory.login("email@email.com", "pass");
     }
 
     @When("I click on the first bug")
     public void i_click_on_the_first_bug() {
         // Write code here that turns the phrase above into concrete actions
+        List<WebElement> bugButtons = driver.findElements(By.className("viewAllBtn"));
 
+        bugButtons.get(0).click();
     }
     @When("I input a comment")
     public void i_input_a_comment() {

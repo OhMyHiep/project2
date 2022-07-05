@@ -71,7 +71,7 @@ function displayBugs(data)
                         <h6 class="card-subtitle mb-2 text-muted">Title: ${data.title} Issue Date: ${issueDate.getMonth()+1}/${issueDate.getDate()}/${issueDate.getFullYear()} Status: ${data.status} Urgency: ${data.urgency} Severity: ${data.severity}</h6>
                     </div>
                     <div>
-                        <a class="btn btn-primary" id="viewAllBtn" href="/detailBug?id=${bug_id}">View Full Details</a><br>
+                        <a class="btn btn-primary viewAllBtn" href="/detailBug?id=${bug_id}">View Full Details</a><br>
                     </div>
                 </div><br>`
 
