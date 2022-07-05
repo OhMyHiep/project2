@@ -49,9 +49,6 @@ public class Project2 {
         );
 
         app.start();
-
-        app.get("bug/{bug_id}/comments", BugCommentController.viewAllCommentsRequest,Role.RoleTitle.Programmer);
-        app.post("bug/{bug_id}/comments", BugCommentController.createCommentRequest,Role.RoleTitle.Programmer);
         app.get("/comments/comment/{commentId}", BugCommentController.getCommentByIdRequest,Role.RoleTitle.Programmer);
 
         app.delete("/bug/{bug_id}",BugController.deleteBugById,Role.RoleTitle.Programmer);
@@ -59,10 +56,11 @@ public class Project2 {
         app.get("/bug",BugController.bugList,Role.RoleTitle.Programmer);
         app.post("/bug",BugController.addBug,Role.RoleTitle.Programmer);
         app.patch("/bug",BugController.updateBug,Role.RoleTitle.Programmer);
+        app.get("/bug/assign/{assignedTo}",BugController.bugsByAssignee,Role.RoleTitle.Programmer);
 
         app.get("/comments/{bug_id}",BugCommentController.viewAllCommentsRequest,Role.RoleTitle.Programmer);
         app.post("/comments",BugCommentController.createCommentRequest,Role.RoleTitle.Programmer);
-        app.get("/bug/assign/{assignedTo}",BugController.bugsByAssignee,Role.RoleTitle.Programmer);
+
 
         app.get("/user", UserController.getAll,Role.RoleTitle.Programmer);
         app.post("/login", AuthController.login, Role.RoleTitle.Everyone);
@@ -72,13 +70,13 @@ public class Project2 {
 
     private static void htmlRoutes(Javalin app){
         app.get("/bugSubmission",ctx->{ctx.render("bugSubmission.html");
-        },Role.RoleTitle.Programmer);
+        }, Role.RoleTitle.Everyone);
         app.get("/detailBug",ctx->{ctx.render("bug.html");
-        },Role.RoleTitle.Programmer);
+        }, Role.RoleTitle.Everyone);
         app.get("/",ctx->{ctx.render("login.html");
-        },Role.RoleTitle.Everyone);
+        }, Role.RoleTitle.Everyone);
         app.get("/view",ctx->{ctx.render("bugView.html");
-        },Role.RoleTitle.Programmer);
+        }, Role.RoleTitle.Everyone);
 //        app.get("/managerReviewBug",ctx->{ctx.render("managerReviewBug.html");
 //        },Role.RoleTitle.TechLead);
 
