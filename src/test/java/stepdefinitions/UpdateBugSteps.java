@@ -24,13 +24,14 @@ public class UpdateBugSteps {
     public UpdatePageFactory updatePageFactory;
 
     @Before
-    public void setup(){
-        System.setProperty("webdriver.chrome.driver","src/main/resources/drivers/chromedriver");
-        driver=new ChromeDriver();
+    public void setup() {
+        System.setProperty("webdriver.chrome.driver", "src/main/resources/drivers/chromedriver_win32.exe");
+        driver = new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(Duration.ofMillis(1000));
         driver.get("http://localhost:8080/");
         loginPageFactory = new LoginPageFactory(driver);
-        updatePageFactory=new UpdatePageFactory(driver);
+        updatePageFactory = new UpdatePageFactory(driver);
+
     }
 
     @Given("I am logged in and I am on The detail Bug page")
@@ -50,7 +51,7 @@ public class UpdateBugSteps {
     }
 
     @And("I set the Assignee {string}")
-    public void ISetAssignee(String args0){
+    public void ISetAssignee(String args0) {
         updatePageFactory.inputAssignee(args0);
     }
 
@@ -71,7 +72,9 @@ public class UpdateBugSteps {
     }
 
     @After
-    public void tearDown(){
+    public void tearDown() {
         this.driver.quit();
+
     }
 }
+

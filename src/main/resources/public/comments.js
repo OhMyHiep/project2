@@ -173,7 +173,7 @@ async function submit_comment() {
                 },
                 method: 'POST',
                 body: JSON.stringify({
-                    'bugId': urlParams.get('bugId'),
+                    'bugId': urlParams.get('id'),
                     'commenterUserId': parsedJson.user.user_id,
                     'commentText': textForComment.value
                 })
