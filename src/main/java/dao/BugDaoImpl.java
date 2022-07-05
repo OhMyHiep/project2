@@ -139,6 +139,7 @@ public class BugDaoImpl implements BasicCrud<Bug> {
     public void closeConnection(){
         jdbcUtils.close();
     }
+
     public List<Bug> getBugByCreatorId(Integer creator_id) {
         String sql = "SELECT * " +
                 "FROM project2.bug "+
@@ -164,7 +165,7 @@ public class BugDaoImpl implements BasicCrud<Bug> {
     public List<Bug> getBugByAssignee(Integer assignedTo) {
         String sql = "SELECT *" +
                 "FROM project2.bug "+
-                "where assigned_to=?";
-        return getBugs(assignedTo, sql);
+                "WHERE assigned_to= ?";
+        return getBugs(assignedTo,sql);
     }
 }

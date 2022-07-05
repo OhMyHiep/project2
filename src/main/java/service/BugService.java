@@ -179,15 +179,14 @@ public class BugService {
         if (assignedTo==null) return null;
         List<Bug> bugs =bugDao.getBugByAssignee(assignedTo);
         if (bugs.size()==0) return null;
-        return BugListResponse.builder()
-                .bugs(
-                        bugs.stream()
-                    .map(x->bugDtoMapper(x))
-                    .collect(Collectors.toList()))
-                .build();
+        List<BugDto> bugDto= bugs.stream()
+                .map(x->bugDtoMapper(x))
+                .collect(Collectors.toList());
+        return BugListResponse.builder().bugs(bugDto).build();
 
 
     }
+
 
 
     public BugListResponse getBugByCreatorId(Integer creator_id) {

@@ -65,7 +65,6 @@ public class Project2 {
         app.get("/bug/assign/{assignedTo}",BugController.bugsByAssignee,Role.RoleTitle.Programmer);
 
         app.get("/user", UserController.getAll,Role.RoleTitle.Programmer);
-
         app.post("/login", AuthController.login, Role.RoleTitle.Everyone);
 
         htmlRoutes(app);
