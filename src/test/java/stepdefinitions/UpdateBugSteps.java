@@ -31,6 +31,7 @@ public class UpdateBugSteps {
         driver.get("http://localhost:8080/");
         loginPageFactory = new LoginPageFactory(driver);
         updatePageFactory = new UpdatePageFactory(driver);
+
     }
 
     @Given("I am logged in and I am on The detail Bug page")
@@ -55,7 +56,7 @@ public class UpdateBugSteps {
     }
 
     @And("I chose a status {string}")
-    public void IChoseStatus(String args0) {
+    public void IChoseStatus(String args0){
         updatePageFactory.inputStatus(args0);
     }
 
@@ -66,7 +67,7 @@ public class UpdateBugSteps {
 
     @Then("I will see the feedback {string}")
     public void iWillSeeThe(String arg0) {
-        WebElement ele = driver.findElement(By.id("feedback-msg"));
+        WebElement ele=driver.findElement(By.id("feedback-msg"));
         assertTrue(ele.getText().contains(arg0));
     }
 
@@ -76,3 +77,4 @@ public class UpdateBugSteps {
 
     }
 }
+

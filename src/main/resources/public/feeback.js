@@ -10,6 +10,7 @@ function giveFeedback(status){
         message.setAttribute("class","alert alert-success alert-dismissable fade show")
     }
     message.setAttribute("role","alert");
+    message.setAttribute("id","feedback-msg")
 
     let closeBtn=document.createElement("button");
     closeBtn.setAttribute("type","button");
@@ -20,13 +21,9 @@ function giveFeedback(status){
     xClose.setAttribute("aria-hidden","true");
     xClose.innerText="x";
 
-    console.log(xClose);
-    console.log(closeBtn);
-
     closeBtn.appendChild(xClose);
     message.appendChild(closeBtn);
 
-    console.log(message);
     return message;
 }
 

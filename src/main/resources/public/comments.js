@@ -93,7 +93,7 @@ async function get_comments_by_id(){
         })
 
         if (res.status != 200){
-            create_error_message("No comments to be found. Bug doesn't exist!")
+            create_error_message("No comments to be found")
             const message = `Couldn't obtain requests! An error occured: ${res.status} ${res.statusText}`
             throw message
         }

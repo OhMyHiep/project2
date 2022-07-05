@@ -18,6 +18,7 @@ async function submitBug(){
     if(!title.value || !severity.value || !urgency.value || !description.value ){
         message=giveFeedback(400);
         message.appendChild(document.createTextNode("Fill Out All Fields"));
+        console.log("message here "+message.innerText);
     }
     else {
         const result =await fetch("/bug",{

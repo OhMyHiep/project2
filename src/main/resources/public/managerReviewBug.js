@@ -46,7 +46,6 @@ async function updateBug(){
         message=giveFeedback(200);
         message.appendChild(document.createTextNode("Update Failed"));
     }
-
     feedback.appendChild(message);
 
 }

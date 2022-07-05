@@ -28,6 +28,7 @@ public class BugSubmissionSteps {
         System.setProperty("webdriver.chrome.driver","src/main/resources/drivers/chromedriver_win32.exe");
         driver=new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(Duration.ofMillis(5000));
+
         driver.get("http://localhost:8080/");
         bugPageFactory = new BugSubmissionPageFactory(driver);
         loginPageFactory = new LoginPageFactory(driver);
@@ -38,6 +39,7 @@ public class BugSubmissionSteps {
     public void iAmLoggedInAndOnTheBugSubmissionPage() {
         loginPageFactory.login("email@email.com", "pass");
         driver.get("http://localhost:8080/view");
+
     }
 
     @When("I fill out the title {string}")
@@ -75,6 +77,5 @@ public class BugSubmissionSteps {
     public void teardown() {
         this.driver.quit();
     }
-
 
 }
