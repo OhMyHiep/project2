@@ -265,12 +265,12 @@ public class TestBugService {
     @Test
     public void test_update_sucess(){
         Bug tempBug= Bug.builder().bug_id(1).build();
-        Assert.assertEquals(mockBugService.update(tempBug),bareBugListResponse);
+        Assert.assertEquals(mockBugService.update(tempBug),bareBugListResponse); //WHERE TESTS START TO GO WRONG
     }
     @Test
     public void test_update_incorrectID(){
         Bug tempBug= Bug.builder().bug_id(90000).build();
-        Assert.assertEquals(mockBugService.update(tempBug),null);
+        Assert.assertNull(mockBugService.update(tempBug)); //changed from assert equals
     }
 
     @DataProvider
