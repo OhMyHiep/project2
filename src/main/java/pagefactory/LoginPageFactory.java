@@ -34,5 +34,7 @@ public class LoginPageFactory {
 
     public void clickSubmitBtn(){submitButton.click();}
 
+    public void getLoginPage(){this.webDriver.get("http://localhost:8080/");}
+
     public String getPageTitle(){return this.webDriver.getTitle();}
 }

@@ -118,7 +118,10 @@
 <!--                        <suiteXmlFile>src/test/resources/test_suite_comments.xml</suiteXmlFile>-->
 <!--                        <suiteXmlFile>src/test/resources/test_suite_bugs.xml</suiteXmlFile>-->
                         <suiteXmlFile>src/test/resources/selenium_test_suite.xml</suiteXmlFile>
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
                     </suiteXmlFiles>
                 </configuration>
             </plugin>
