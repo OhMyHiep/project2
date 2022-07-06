@@ -93,7 +93,8 @@ public class AuthService {
         String username = login.getUsername();
         String pw = login.getPassword();
 
-        String roleString = AuthenticationDao.authenticate(username,pw);
+        AuthenticationDao ad = new AuthenticationDao();
+        String roleString = ad.authenticate(username,pw);
         if (roleString==null) return null;
         String[] splitted = roleString.split(",");
 

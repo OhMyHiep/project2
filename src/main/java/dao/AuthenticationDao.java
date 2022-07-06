@@ -21,7 +21,7 @@ import java.security.Key;
 public class AuthenticationDao {
 
     @Nullable
-    public static String authenticate(String username, String password) {
+    public String authenticate(String username, String password) {
         JDBCUtils dbUtil = new JDBCUtils();
         String qry = "SELECT * FROM project2.Users WHERE username=? AND passwd=?;";
 //        String hashedPass = Cryptographer.MD5(password);
@@ -61,5 +61,7 @@ public class AuthenticationDao {
 
         return roles;
     }
+
+
 
 }
