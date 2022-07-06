@@ -5,9 +5,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import utils.Generated;
 
 import java.util.List;
-
+@Generated
 public class CommentPageFactory {
     WebDriver webDriver;
 

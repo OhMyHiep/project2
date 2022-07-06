@@ -4,12 +4,15 @@ package entity;
 import io.javalin.core.security.RouteRole;
 import lombok.*;
 
+
+@Generated
 @Data
 public class Role {
 
     private Integer role_id;
     private RouteRole role_title;
 
+    @Generated
     public enum RoleTitle implements RouteRole {
         Programmer,
         TechLead,

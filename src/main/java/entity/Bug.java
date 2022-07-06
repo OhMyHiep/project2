@@ -5,10 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import utils.Generated;
 
 import java.sql.Date;
 
-
+@Generated
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

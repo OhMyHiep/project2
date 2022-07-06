@@ -1,5 +1,5 @@
 package utils;
-
+@Generated
 public class Cryptographer {
 
     public static String MD5(String md5) {

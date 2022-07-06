@@ -8,11 +8,12 @@ import controller.BugController;
 import io.javalin.http.staticfiles.Location;
 import io.javalin.plugin.rendering.JavalinRenderer;
 import io.javalin.plugin.rendering.template.JavalinPebble;
+import utils.Generated;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Generated
 public class Project2 {
     public static void main(String[] args) {
         JavalinRenderer.register(JavalinPebble.INSTANCE,".html");

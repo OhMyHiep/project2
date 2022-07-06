@@ -3,10 +3,12 @@ import entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import service.AuthService;
+import utils.Generated;
 import utils.Tuple;
 
 import java.util.ArrayList;
 
+@Generated
 public class Project2a {
 
     public static void main(String[] args) {
