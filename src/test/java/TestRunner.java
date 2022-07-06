@@ -6,7 +6,9 @@ import org.testng.annotations.Test;
 
 @CucumberOptions(
     plugin = {"pretty", "html:target/cucumber.html"},
+
     features = {"src/test/resources/features"},
+
     glue = {"stepdefinitions"}
 )
 public class TestRunner extends AbstractTestNGCucumberTests {
