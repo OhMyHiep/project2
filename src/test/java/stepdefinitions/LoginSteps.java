@@ -33,15 +33,33 @@ public class LoginSteps {
 
     @When("I enter username as {string}")
     public void enterUsername(String username){
-
+        if(!(username.equals("empty"))){
+            login.inputUserName(username);
+        }
     }
     @When("I enter password as {string}")
     public void enterPassword(String password){
-
+        if(!(password.equals("empty"))){
+            login.inputPassword(password);
+        }
     }
-    @Then("I can see all the bugs")
+    @When("I click Login button")
+    public void pressLoginBtn(){
+        login.clickSubmitBtn();
+    }
+    @Then("I can see all bug page")
     public void landingPage(){
+        try {
+            Thread.sleep(3000);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        Assert.assertEquals(bugPageFactory.createBugBtnDisplayed(),true);
+    }
 
+    @Then("I can the error message as {string}")
+    public void invalidMessage(String expected){
+        Assert.assertEquals(login.getErrorMessage(),expected);
     }
 
     @After

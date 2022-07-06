@@ -17,6 +17,9 @@ public class LoginPageFactory {
     @FindBy(id = "submit")
     WebElement submitButton;
 
+    @FindBy(xpath = "//*[@id=\'login-error-div\']/div")
+    WebElement errorMessageDiv;
+
     public LoginPageFactory(WebDriver webDriver){
         this.webDriver=webDriver;
         PageFactory.initElements(webDriver,this);
@@ -37,4 +40,6 @@ public class LoginPageFactory {
     public void getLoginPage(){this.webDriver.get("http://localhost:8080/");}
 
     public String getPageTitle(){return this.webDriver.getTitle();}
+
+    public String getErrorMessage(){ return errorMessageDiv.getText();}
 }

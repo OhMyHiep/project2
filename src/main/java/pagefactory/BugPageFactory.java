@@ -5,7 +5,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
@@ -13,8 +12,8 @@ import java.time.Duration;
 public class BugPageFactory {
     WebDriver webDriver;
     WebDriverWait wait;
-//    @FindBy(xpath ="/html/body/div/div/div[1]/div/div/div/div[1]/div[2]/a")
-//    WebElement firstBugDetailsBtn;
+    @FindBy(id ="goToSubmission")
+    WebElement createBugBtn;
 
     public BugPageFactory(WebDriver webDriver)
     {
@@ -35,6 +34,9 @@ public class BugPageFactory {
        button.click();
     }
 
+    public boolean createBugBtnDisplayed(){
+        return createBugBtn.isDisplayed();
+    }
 
     public String  getTitle(){return this.webDriver.getTitle();}
 }
