@@ -6,11 +6,7 @@ import org.testng.annotations.Test;
 
 @CucumberOptions(
     plugin = {"pretty", "html:target/cucumber.html"},
-<<<<<<< Updated upstream
     features = {"src/test/resources/features"},
-=======
-    features = {"src/test/resources/features/Bug_View_Feature.feature"},
->>>>>>> Stashed changes
     glue = {"stepdefinitions"}
 )
 public class TestRunner extends AbstractTestNGCucumberTests {
