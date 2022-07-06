@@ -21,7 +21,14 @@ public class AuthController {
     public static Handler login = ctx -> {
         AuthRequest login= ctx.bodyAsClass(AuthRequest.class);
         if (login != null) {
-            ctx.json(authService.buildJwt(login));
+            AuthResponse authResponse = authService.buildJwt(login);
+            if (authResponse == null) {
+                ctx.result("No such user exists");
+                ctx.status(404);
+            }
+            else {
+                ctx.json(authResponse);
+            }
         }
         else {
             ctx.result("Invalid login json");
