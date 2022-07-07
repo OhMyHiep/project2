@@ -22,6 +22,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import service.*;
+import utils.Tuple;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -51,15 +52,20 @@ public class TestAuthService {
     private User validUser;
     private Role invalidRole;
     private Role validRole;
+    private Role validRole2;
     private AuthRequest invalidAuthRequest;
     private AuthRequest validAuthRequest;
 
     private AuthResponse validAuthResponse;
     private UserResponse validUserResponse;
 
+    private ArrayList<Role> validRoleList;
+
     private BugDto bugDto;
     private BugCommentDto bugCommentDto;
     private RoleDto roleDto;
+
+    private String authTokenExample;
 
     private Bug bug;
     private BugComment bugComment;
@@ -83,7 +89,11 @@ public class TestAuthService {
                 .lastname("Smith")
                 .authToken("0")
                 .build();
-        validRole = new Role(1,"programmer");
+        validRole = new Role(1,"Programmer");
+        validRole2 = new Role(2,"TechLead");
+
+        validRoleList = new ArrayList<>();
+        validRoleList.add(validRole);
         invalidAuthRequest = AuthRequest.builder()
                 .username("")
                 .build();
@@ -134,8 +144,10 @@ public class TestAuthService {
                 .comments(bugCommentDtoArrayList)
                 .build();
 
+
+        authTokenExample = "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VyX2lkIjoxLCJyb2xlcyI6IlByb2dyYW1tZXIsUHJvZ3JhbW1lciwiLCJzdWIiOiJKV1QgQXV0aCIsImp0aSI6ImNiOTg5ZGVjLWY2ZjUtNDRkYi05N2NhLThlMTlkMjZmYjM2MSIsImlhdCI6MTY1NzA3ODMyNSwiZXhwIjoxNjU3MDgxMzI1fQ.tuTsNxDFICLuXibxXAM92NZ9GcxhXTiSSksb2Yre0O3FNbi6P9hltHwIub2Fsk9kVoYko9QvsQ6Vu-zJw_B93A";
         validAuthResponse = AuthResponse.builder()
-                        .token("eyJhbGciOiJIUzUxMiJ9.eyJ1c2VyX2lkIjoxLCJyb2xlcyI6IlByb2dyYW1tZXIsUHJvZ3JhbW1lciwiLCJzdWIiOiJKV1QgQXV0aCIsImp0aSI6ImNiOTg5ZGVjLWY2ZjUtNDRkYi05N2NhLThlMTlkMjZmYjM2MSIsImlhdCI6MTY1NzA3ODMyNSwiZXhwIjoxNjU3MDgxMzI1fQ.tuTsNxDFICLuXibxXAM92NZ9GcxhXTiSSksb2Yre0O3FNbi6P9hltHwIub2Fsk9kVoYko9QvsQ6Vu-zJw_B93A")
+                        .token(authTokenExample)
                                 .user(validUserResponse)
                                         .build();
 
@@ -143,6 +155,7 @@ public class TestAuthService {
         when(mockUserDao.getByCredentials("email@email.com","pass")).
                 thenReturn(validUser);
         when(mockRoleDao.getById(1)).thenReturn(validRole);
+        when(mockRoleDao.getAll()).thenReturn(validRoleList);
 
         when(mockRoleDao.getByTitle("Programmer")).thenReturn(validRole);
         when(mockRoleDao.getByTitle("TechLead")).thenReturn(validRole);
@@ -177,13 +190,28 @@ public class TestAuthService {
             String[] tokenParts2 = expected.getToken().split("\\.");
 
             Assert.assertEquals(tokenParts[0],tokenParts2[0]);
-            Assert.assertEquals(tokenParts[1],tokenParts2[1]);
+            //Assert.assertEquals(tokenParts[1],tokenParts2[1]);
             Assert.assertEquals(response.getUser(),expected.getUser());
         } else {
             Assert.assertEquals(response,expected);
         }
     }
 
+
+    @DataProvider
+    public Object[][] ddJwtDataProvider() {
+        return new Object[][] {
+                {mockAuthService.buildJwt(validAuthRequest).getToken(), new Tuple<ArrayList<Role>,User>(validRoleList,validUser)}
+        };
+    }
+
+    @Test(dataProvider = "ddJwtDataProvider")
+    public void test_ddJwt(String in, Tuple<ArrayList<Role>,User> expected) {
+        Tuple<ArrayList<Role>,User> stuff = mockAuthService.ddJwt(in);
+
+        Assert.assertEquals(stuff.x.get(0),expected.x.get(0));
+        Assert.assertEquals(stuff.y,expected.y);
+    }
 
 
 }
