@@ -79,26 +79,36 @@ function create_error_message(errorMessage) {
     }
 }
 
+function showLoader() {
+    document.querySelector('#comment-loading-indicator').classList.remove('d-none')
+}
+
+function hideLoader() {
+    document.querySelector('#comment-loading-indicator').classList.add('d-none')
+}
+
 async function get_comments_by_id(){
     try {
+        showLoader()
         let loginInfo = localStorage.getItem('login')
         let parsedJson = JSON.parse(loginInfo)
         let qString = window.location.search;
-            const urlParams = new URLSearchParams(qString)
+        const urlParams = new URLSearchParams(qString)
 
         const res = await fetch(`bug/${urlParams.get('id')}/comments`, {
             headers: {
                    'Authorization': parsedJson.token
             }
         })
-
         if (res.status != 200){
+            hideLoader()
             create_error_message("No comments to be found")
             const message = `Couldn't obtain requests! An error occured: ${res.status} ${res.statusText}`
             throw message
         }
         else {
             const commentJson = await res.json()
+            hideLoader()
             populate_comments(commentJson)
         }
     }
@@ -173,7 +183,7 @@ async function submit_comment() {
                 },
                 method: 'POST',
                 body: JSON.stringify({
-                    'bugId': urlParams.get('bugId'),
+                    'bugId': urlParams.get('id'),
                     'commenterUserId': parsedJson.user.user_id,
                     'commentText': textForComment.value
                 })

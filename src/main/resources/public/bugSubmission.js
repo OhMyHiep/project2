@@ -21,9 +21,12 @@ async function submitBug(){
         console.log("message here "+message.innerText);
     }
     else {
+        let loginInfo = localStorage.getItem('login')
+        let parsedJson = JSON.parse(loginInfo)
         const result =await fetch("/bug",{
             headers:{
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': parsedJson.token
             },
             method: 'POST',
             body: JSON.stringify({

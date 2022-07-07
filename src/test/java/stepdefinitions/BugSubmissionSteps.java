@@ -10,6 +10,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.Select;
 import pagefactory.BugSubmissionPageFactory;
 import pagefactory.LoginPageFactory;
 
@@ -27,7 +28,8 @@ public class BugSubmissionSteps {
 
         System.setProperty("webdriver.chrome.driver","src/main/resources/drivers/chromedriver");
         driver=new ChromeDriver();
-        driver.manage().timeouts().implicitlyWait(Duration.ofMillis(1000));
+        driver.manage().timeouts().implicitlyWait(Duration.ofMillis(5000));
+
         driver.get("http://localhost:8080/");
         bugPageFactory = new BugSubmissionPageFactory(driver);
         loginPageFactory = new LoginPageFactory(driver);
@@ -37,6 +39,9 @@ public class BugSubmissionSteps {
     @Given("I am logged in and on The bug submission page")
     public void iAmLoggedInAndOnTheBugSubmissionPage() {
         loginPageFactory.login("email@email.com", "pass");
+        WebElement goButton = driver.findElement(By.id("goToSubmission"));
+        goButton.click();
+
     }
 
     @When("I fill out the title {string}")
@@ -51,12 +56,14 @@ public class BugSubmissionSteps {
 
     @And("I input out the {string}")
     public void iInputOutThe(String severity) {
-        bugPageFactory.inputSeverity(severity);
+        Select severityElement = new Select(driver.findElement(By.id("severity")));
+        severityElement.selectByValue(severity);
     }
 
     @And("I set the {string}")
     public void iSetThe(String urgency) {
-        bugPageFactory.inputUrgency(urgency);
+        Select urgencyElement = new Select(driver.findElement(By.id("urgency")));
+        urgencyElement.selectByValue(urgency);
     }
 
     @And("I click submit")
@@ -74,8 +81,5 @@ public class BugSubmissionSteps {
     public void teardown() {
         this.driver.quit();
     }
-
-
-
 
 }

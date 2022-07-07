@@ -7,14 +7,18 @@ function validateLogin(username, password) {
 
 function createAlert(errorMessage) {
     if (!document.querySelector('.alert')) {
-        let ErrorDiv = document.querySelector('#login-error-div');
+        let errorDiv = document.querySelector('#login-error-div');
 
         let alertElement = document.createElement("div")
         alertElement.setAttribute("class", "alert alert-danger")
         alertElement.setAttribute("role", "alert")
         alertElement.textContent = errorMessage
     
-        ErrorDiv.append(alertElement);
+        errorDiv.append(alertElement);
+    }
+    else if (document.querySelector('.alert').textContent !== errorMessage) {
+        let alertElement = document.querySelector('.alert')
+        alertElement.textContent = errorMessage
     }
 }
 
@@ -34,27 +38,32 @@ async function login() {
     let usernameText = document.querySelector("#username").value;
     let passwordText = document.querySelector("#password").value;
 
-    validateLogin(usernameText, passwordText)
-
-    const response = await fetch('/login', {
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        method: 'POST',
-        body: JSON.stringify({
-            'username': usernameText,
-            'password': passwordText
-        })
-    })
-    if (!response.ok) {
-        createAlert("Invalid login!")
+    if (validateLogin(usernameText, passwordText)) {
+        const response = await fetch('/login', {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                method: 'POST',
+                body: JSON.stringify({
+                    'username': usernameText,
+                    'password': passwordText
+                })
+            })
+        if (!response.ok) {
+            createAlert("Invalid login!")
+        }
+        else {
+            removeAlert()
+            const loginJson = await response.json()
+            console.log(JSON.stringify(loginJson))
+            saveAndRedirect(loginJson)
+        }
     }
     else {
-        removeAlert()
-        const loginJson = await response.json()
-        console.log(JSON.stringify(loginJson))
-        saveAndRedirect(loginJson)
+        createAlert("Must not be empty!")
     }
+
+
 }
 
 document.querySelector("#submit").addEventListener("click", login)

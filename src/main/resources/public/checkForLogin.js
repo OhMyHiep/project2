@@ -2,6 +2,7 @@
 function logOut() {
     if (localStorage.getItem("login")) {
         localStorage.removeItem("login")
+        window.location.replace('http://localhost:8080/')
     }
 }
 

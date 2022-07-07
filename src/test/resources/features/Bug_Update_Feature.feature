@@ -1,5 +1,5 @@
 Feature: Updating Bug
-    update an existing bug
+  update an existing bug
 
   Scenario Outline:
     Given I am logged in and I am on The detail Bug page
@@ -11,9 +11,9 @@ Feature: Updating Bug
     Then I will see the feedback "<feedback>"
 
     Examples:
-    | severity | urgency |status |Assignee | feedback               |
-    | 1        | 2       | 2     |         | Update Success         |
-    | 4        |         |       |         | Update Success         |
-    |          | 2       |       |         | Update Success         |
-    |          |         | 2     |         | Update Success         |
-    |          |         |       |   1     | Update Success         |
+      | severity | urgency |status |Assignee | feedback               |
+      | 1        | 2       | 2     |         | Update Success         |
+      | 4        |         |       |         | Update Success         |
+      |          | 2       |       |         | Update Success         |
+      |          |         | 2     |         | Update Success         |
+      |          |         |       |   1     | Update Success         |

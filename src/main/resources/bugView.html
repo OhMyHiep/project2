@@ -1,29 +1,25 @@
 {% extends "base.html" %}
-{% block title %} Login {% endblock %}
+{% block title %} Bug View {% endblock %}
 {% block content %}
 <h1 align="center" xmlns="">{{success}}</h1>
 <body>
 <div>
     <link href="style.css" rel="stylesheet">
-    <script src="index.js"></script>
+
     <h3 align = "center" >View All Bugs</h3>
+    <button class="btn btn-primary" id="goToSubmission">Create Bug</button>
     <div class="viewAll">
         <div class="row g-3" id="comment-section-list">
             <h3 class="pt-2">Bugs</h3>
             <div class="col-12 m-1">
                 <div class="card" id="bugViewer">
-                    <div class="card-body">
-                        <h6 class="card-subtitle mb-2 text-muted">Created By: Issue Date: Status:  Urgency:  Severity: </h6>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    </div>
+                    <h5> No Bugs To Display</h5>
                 </div>
             </div>
         </div>
+    </div>
+</div>
 
-    </div>
-        <div id="overlay"></div>
-    <div class="form-group">
-<!--        <input type="submit" class="btn btn-primary" id="submit" name="submit">-->
-    </div>
+<script src="index.js"></script>
 </body>
 {% endblock %}

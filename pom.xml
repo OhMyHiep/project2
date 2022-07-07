@@ -108,10 +108,12 @@
                 <version>3.0.0-M6</version>
                 <configuration>
                     <!--                    <skipTests>true</skipTests>-->
+
                     <suiteXmlFiles>
                         <suiteXmlFile>src/test/resources/test_suite_comments.xml</suiteXmlFile>
                         <suiteXmlFile>src/test/resources/test_suite_bugs.xml</suiteXmlFile>
                         <suiteXmlFile>src/test/resources/test_suite_user_role.xml</suiteXmlFile>
+
 <!--                        <suiteXmlFile>src/test/resources/selenium_test_suite.xml</suiteXmlFile>-->
                     </suiteXmlFiles>
                 </configuration>
@@ -120,6 +122,7 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.8</version>
+
                 <executions>
                     <execution>
                         <goals>

@@ -11,7 +11,8 @@ Feature: Report a Bug
     Then a "<message>" confirmation will appear
 
     Examples:
-    | title                         | description                                                                         | severity | urgency | message              |
-    | "example title from selenium" | "this is a very long description that is supposed to be over fifty characters long" | 1        | 1       | Success              |
-    |                               | "dmvnclsdljcndsjljds    cdcsdcsdcsdcdsfffgfhbgbgbgbkdnfkvnknvknkvnknvkncknvncvmn"   | 3        | 4       | Fill Out All Fields  |
-    | "example title from selenium" | "invalid description"                                                               | 1        | 1       | Success              |
+      | title                         | description                                                                         | severity | urgency | message              |
+      | example title from selenium   | this is a very long description that is supposed to be over fifty characters long   | 1        | 1       | Success              |
+      | empty                         | dmvnclsdljcndsjljds    cdcsdcsdcsdcdsfffgfhbgbgbgbkdnfkvnknvknkvnknvkncknvncvmn     | 3        | 4       | Fill Out All Fields  |
+      | example title from selenium   | invalid description                                                                 | 1        | 1       | Failed to submit bug |
+
