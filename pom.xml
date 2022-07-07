@@ -111,11 +111,9 @@
                     <suiteXmlFiles>
                         <suiteXmlFile>src/test/resources/test_suite_comments.xml</suiteXmlFile>
                         <suiteXmlFile>src/test/resources/test_suite_bugs.xml</suiteXmlFile>
+                        <suiteXmlFile>src/test/resources/test_suite_user_role.xml</suiteXmlFile>
 <!--                        <suiteXmlFile>src/test/resources/selenium_test_suite.xml</suiteXmlFile>-->
                     </suiteXmlFiles>
-                    <excludes>
-                        <exclude>src/main/java/entity/**/*</exclude>
-                    </excludes>Genrated
                 </configuration>
             </plugin>
             <plugin>
