@@ -34,8 +34,5 @@ public class Role {
         role_id = id;
     }
 
-    public String getRole_title(){
-        return role_title+"";
-    }
 
 }
