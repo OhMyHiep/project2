@@ -1,0 +1,10 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="Testing bugs suite">
+    <test name="Testing Role and User">
+        <classes>
+            <class name="serviceTest.TestRoleService"/>
+            <class name="serviceTest.TestUserService"/>
+            <class name="daoTest.TestRoleDao"/>
+        </classes>
+    </test>
+</suite>

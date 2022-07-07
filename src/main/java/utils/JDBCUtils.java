@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@Generated
 public class JDBCUtils {
 	public Connection conn;
 	public PreparedStatement stat;

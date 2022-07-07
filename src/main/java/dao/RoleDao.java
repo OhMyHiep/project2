@@ -86,7 +86,7 @@ public class RoleDao implements BasicCrud<Role> {
         JDBCUtils db = new JDBCUtils();
         String qry = "INSERT INTO project2.roles(role_id, role_title) VALUES (?,?) RETURNING role_id;";
 
-        ResultSet r = db.executeQuery(qry, data.getRole_id(), data.getRole_title());
+        ResultSet r = db.executeQuery(qry, data.getRole_id(), data.getRole_title()+"");
 
         try {
             r.next();

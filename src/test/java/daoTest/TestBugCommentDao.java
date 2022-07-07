@@ -11,6 +11,8 @@ import javax.jws.Oneway;
 import java.sql.Date;
 import java.util.List;
 
+import static org.testng.AssertJUnit.assertTrue;
+
 public class TestBugCommentDao {
 
     private BugCommentDao bugCommentDao;
@@ -20,7 +22,6 @@ public class TestBugCommentDao {
     public void setUp() {
         bugCommentDao = new BugCommentDao();
         insertComment = BugComment.builder().bugId(2).commenterUserId(1).commentText("This is a comment for tests").commentDate(new Date(System.currentTimeMillis())).build();
-
     }
 
     @Test(dataProvider = "commentIdProvider", dataProviderClass = BugCommentDaoDataProvider.class)
@@ -52,6 +53,15 @@ public class TestBugCommentDao {
     }
 
     @Test
+    public void testGetAll(){
+        assertTrue(bugCommentDao.getAll().size()>0);
+    }
+
+    @Test
+    public void testDeleteById(){
+        assertTrue(bugCommentDao.deleteById(insertComment.getBugId())!=null);
+    }
+
     public void testGetBugByCreatorId() {
         List<BugComment> comments = bugCommentDao.getBugByCreatorId(1);
 

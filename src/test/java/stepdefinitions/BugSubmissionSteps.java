@@ -26,7 +26,7 @@ public class BugSubmissionSteps {
     @Before
     public void setup(){
 
-        System.setProperty("webdriver.chrome.driver","src/main/resources/drivers/chromedriver_win32.exe");
+        System.setProperty("webdriver.chrome.driver","src/main/resources/drivers/chromedriver");
         driver=new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(Duration.ofMillis(5000));
 
