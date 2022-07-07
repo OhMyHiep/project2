@@ -7,7 +7,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import javax.jws.Oneway;
 import java.sql.Date;
 import java.util.List;
 
@@ -62,6 +61,7 @@ public class TestBugCommentDao {
         assertTrue(bugCommentDao.deleteById(insertComment.getBugId())!=null);
     }
 
+    @Test
     public void testGetBugByCreatorId() {
         List<BugComment> comments = bugCommentDao.getBugByCreatorId(1);
 
